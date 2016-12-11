@@ -301,4 +301,4 @@ glUseProgram(programID);
 ![red_triangle]({{site.baseurl}}/assets/images/tuto-2-first-triangle/red_triangle.png){: height="231px" width="300px"}
 
 In the next tutorial we'll learn transformations : How to setup your camera, move your objects, etc.
-다음 튜토리얼에서는 카메라를 셋업하고, 오브젝트를 이동시키는 등 변환에 대해해 배우게 됩니다. 
+다음 튜토리얼에서는 변환에 대해 배우게 됩니다. 카메라를 셋업하는 방법과, 오브젝트를 이동시키는 방법 등을 배우겠습니다.  
