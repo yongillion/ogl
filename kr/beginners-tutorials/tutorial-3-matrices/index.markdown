@@ -11,91 +11,92 @@ tags: []
 ---
 {:TOC}
 
-> _The engines don't move the ship at all. The ship stays where it is and the engines move the universe around it._
+> _엔진이 배를 움직이는 것이 아니다. 배는 그 자리에 가만히 있으며 엔진이 배를 감싸고 있는 세상을 움직인다._
 > 
 > Futurama
 
-**This is the single most important tutorial of the whole set. Be sure to read it at least eight times.**
+**이 튜토리얼은 전체 튜토리얼 중에서 가장 중요합니다. 최소 8번 이상 읽으세요.**
 
-# Homogeneous coordinates
+# 동차 좌표계 (Homogeneous coordinates)
 
-Until then, we only considered 3D vertices as a (x,y,z) triplet. Let's introduce w. We will now have (x,y,z,w) vectors.
+지금까지 우리는 3D 좌표를 (x,y,z) 세가지로만 다루었습니다. 이제 w를 소개합니다. 앞으로 우리는 (x,y,z,w) 벡터를 사용할 것입니다.
 
-This will be more clear soon, but for now, just remember this :
+이것에 대해 곧 명확히 알게 되겠지만 지금은 이것만 기억하도록 합니다.
 
-- If w == 1, then the vector (x,y,z,1) is a position in space.
-- If w == 0, then the vector (x,y,z,0) is a direction.
+- w == 1이면 벡터 (x,y,z,1)은 공간에서의 위치를 나타냅니다.
+- w == 0이면 벡터 (x,y,z,0)는 방향을 나타냅니다.
 
-(In fact, remember this forever.)
+(사실은 이를 영원히 기억해야 합니다.)
 
-What difference does this make ? Well, for a rotation, it doesn't change anything. When you rotate a point or a direction, you get the same result. However, for a translation (when you move the point in a certain direction), things are different. What could mean "translate a direction" ? Not much.
+이것이 무슨 차이를 만들어 낼까요? 회전(Rotation) 측면에서는 아무것도 변하지 않습니다. 위치나 방향을 회전한다면 같은 결과를 얻게 됩니다. 하지만 평행이동(Translation, 점을 특정 방향으로 이동하는 것)이라는 측면에서는 다릅니다. "방향을 평행이동한다"라는 것은 무슨 의미일까요? 말이 안됩니다.
 
-Homogeneous coordinates allow us to use a single mathematical formula to deal with these two cases.
+동차 좌표계는 두가지 경우를 하나의 수학 공식으로 다룰 수 있게 해줍니다.
 
-# Transformation matrices
+# 변환 행렬 (Transformation matrices)
 
 
-## An introduction to matrices
+## 행렬의 소개 (An introduction to matrices)
 
-Simply put, a matrix is an array of numbers with a predefined number of rows and colums. For instance, a 2x3 matrix can look like this :
+
+간단히 말해 행렬은 미리 정의된 개수의 행(Row)과 열(Column)만큼의 숫자 배열입니다. 예를 들어 2x3 행렬은 다음과 같이 생겼습니다.
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/2X3.png)
 
-In 3D graphics we will mostly use 4x4 matrices. They will allow us to transform our (x,y,z,w) vertices. This is done by multiplying the vertex with the matrix :
+3D 그래픽에서는 대부분 4x4 행렬을 사용합니다. 이 행렬은 (x,y,z,w) 정점들을 변환(Transformation)할 수 있게 해줍니다. 정점에 행렬을 곱함으로써 수행할 수 있습니다.
 
-**Matrix x Vertex (in this order !!) = TransformedVertex**
+**행렬 x 정점 (이 순서대로 !!) = 변환 된 정점**
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/MatrixXVect.gif)
 
-This isn't as scary as it looks. Put your left finger on the a, and your right finger on the x. This is _ax_. Move your left finger to the next number (b), and your right finger to the next number (y). You've got _by_. Once again : _cz_. Once again : _dw_. ax + by + cz + dw. You've got your new x ! Do the same for each line, and you'll get your new (x,y,z,w) vector.
+보기보다 무섭진 않습니다. 왼쪽 손가락을 a에 두고, 오른쪽 손가락을 x에 두세요. 이것이 _ax_ 입니다. 왼쪽 손가락을 다음 숫자인 (b)로 옮기세요. 그리고 오른쪽 손가락을 다음 숫자인 (y)로 옮기세요. 이것이 _by_ 입니다. 다시 한번 _cz_, 또 다시 한번 _dw_. ax + by + cz + dw. 새로운 x를 얻었습니다! 각 줄에 같은 작업을 수행하면 새로운 (x,y,z,w) 벡터를 얻을 수 있습니다.
 
-Now this is quite boring to compute, an we will do this often, so let's ask the computer to do it instead.
+이제 이것을 계산하기가 지루합니다. 우리는 자주 이 계산을 할 것이므로 컴퓨터가 대신하도록 요청하겠습니다.
 
-**In C++, with GLM:**
+**C++에서 GLM을 이용하여:**
 
 ``` cpp
 glm::mat4 myMatrix;
 glm::vec4 myVector;
 // fill myMatrix and myVector somehow
-glm::vec4 transformedVector = myMatrix * myVector; // Again, in this order ! this is important.
+glm::vec4 transformedVector = myMatrix * myVector; // 다시 한번 말하지만 반드시 이 순서대로 해야 합니다! 순서가 정말 중요합니다.
 ```
 
-**In GLSL :**
+**GLSL에서:**
 
 ``` glsl
 mat4 myMatrix;
 vec4 myVector;
-// fill myMatrix and myVector somehow
-vec4 transformedVector = myMatrix * myVector; // Yeah, it's pretty much the same than GLM
+// myMatrix와 myVector를 어떠한 방법으로 채웁니다.
+vec4 transformedVector = myMatrix * myVector; // 네, GLM과 아주 비슷합니다.
 ```
 
-( have you cut'n pasted this in your code ? go on, try it)
+( 여러분의 코드에 복사/붙여넣기 하셨나요? 자 한번 해보세요.)
 
-## Translation matrices
+## 평행 이동 행렬(Translation matrices)
 
-These are the most simple tranformation matrices to understand. A translation matrix look like this :
+이것은 이해하기 가장 쉬운 변환 행렬입니다. 평행 이동 행렬은 다음과 같이 생겼습니다. 
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/translationMatrix.png)
 
-where X,Y,Z are the values that you want to add to your position.
+X,Y,Z는 위치에 더하고자 하는 값입니다.
 
-So if we want to translate the vector (10,10,10,1) of 10 units in the X direction, we get :
+그래서 만약 벡터 (10,10,10,1)을 X 방향으로 10만큼 이동시키고자 한다면 다음과 같습니다.
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/translationExamplePosition1.png)
 
-(do it ! doooooo it)
+(해보세요! 해보오오세요!)
 
-... and we get a (20,10,10,1) homogeneous vector ! Remember, the 1 means that it is a position, not a direction. So our transformation didn't change the fact that we were dealing with a position, which is good.
+... (20,10,10,1) 동차 벡터를 얻었습니다! 기억하세요. 1은 방향이 아닌 위치를 나타냅니다. 그러므로 이 변환은 위치를 다루고 있다는 사실을 변경하지 않았습니다. 좋군요. 
 
-Let's now see what happens to a vector that represents a direction towards the -z axis : (0,0,-1,0)
+이제 -z 축으로의 방향을 나타내는 벡터 (0,0,-1,0)의 경우 어떤 일이 일어나는지 살펴보죠.
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/translationExampleDirection1.png)
 
-... ie our original (0,0,-1,0) direction, which is great because as I said ealier, moving a direction does not make sense.
+원래의 방향(0,0,-1,0)입니다. 훌륭하군요. 이전에 말했듯이 방향을 이동한다는 것은 말이 안되기 때문입니다.
 
-So, how does this translate to code ?
+그렇다면 이를 어떻게 코드로 나타낼까요?
 
-**In C++, with GLM:**
+**C++에서 GLM을 이용하여:**
 
 ``` cpp
 #include <glm/gtx/transform.hpp> // after <glm/glm.hpp>
@@ -105,52 +106,52 @@ glm::vec4 myVector(10.0f, 10.0f, 10.0f, 0.0f);
 glm::vec4 transformedVector = myMatrix * myVector; // guess the result
 ```
 
-**In GLSL :**
+**GLSL에서:**
 
 ``` glsl
 vec4 transformedVector = myMatrix * myVector;
 ```
 
-Well, in fact, you almost never do this in GLSL. Most of the time, you use glm::translate() in C++ to compute your matrix, send it to GLSL, and do only the multiplication :
+사실 GLSL에서는 이 작업을 거의 하지 않습니다. 대부분 여러분은 C++에서 glm::translate()를 이용해 행렬을 계산한 뒤 이를 GLSL로 보내어 곱셈만을 수행합니다. 
 
-## The Identity matrix
+## 단위 행렬(The Identity matrix)
 
-This one is special. It doesn't do anything. But I mention it because it's as important as knowing that multiplying A by 1.0 gives A.
+이것은 특별합니다. 아무것도 하지 않습니다. 그러나 A 곱하기 1.0은 A라는 사실을 아는 것만큼 중요하기 때문에 언급합니다.
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/identityExample.png)
 
-**In C++ :**
+**C++ 에서:**
 
 ``` cpp
 glm::mat4 myIdentityMatrix = glm::mat4(1.0f);
 ```
 
-## Scaling matrices
+## 크기 변환 행렬(Scaling matrices)
 
-Scaling matrices are quite easy too :
+크기 변환 행렬 역시 매우 쉽습니다.
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/scalingMatrix.png)
 
-So if you want to scale a vector (position or direction, it doesn't matter) by 2.0 in all directions :
+따라서 벡터(위치든 방향이든 상관 없습니다)의 크기를 모든 방향에 대해 두배 늘리고 싶다면 다음과 같습니다.
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/scalingExample.png)
 
-and the w still didn't change. You may ask : what is the meaning of "scaling a direction" ? Well, often, not much, so you usually don't do such a thing, but in some (rare) cases it can be handy.
+그리고 w는 여전히 변하지 않았습니다. 다음과 같은 질문을 할 수 있습니다. "방향의 크기를 조절한다"는것이 무슨 의미인가요? 글쎄요. 가끔, 별로, 일반적으로는 이렇게 하지 않지만, (아주 드물게) 몇명 경우에는 도움이 될 수 있습니다.
 
-(notice that the identity matrix is only a special case of scaling matrices, with (X,Y,Z) = (1,1,1). It's also a special case of translation matrix with (X,Y,Z)=(0,0,0), by the way)
+(단위 행렬은 (X,Y,Z) = (1,1,1)인 크기변환행렬의 특별한 경우에 불과하다는 것을 알아두세요. 또한 (X,Y,Z) = (0,0,0)인 평행이동행렬의 특별한 경우이기도 합니다.)
 
-**In C++ :**
+**C++에서 :**
 
 ``` cpp
 // Use #include <glm/gtc/matrix_transform.hpp> and #include <glm/gtx/transform.hpp>
 glm::mat4 myScalingMatrix = glm::scale(2.0f, 2.0f ,2.0f);
 ```
 
-## Rotation matrices
+## 회전 행렬(Rotation matrices)
 
-These are quite complicated. I'll skip the details here, as it's not important to know their exact layout for everyday use. For more information, please have a look to the [Matrices and Quaternions FAQ]({{site.baseurl}}/assets/faq_quaternions/index.html) (popular resource, probably available in your language as well). You can also have a look at the [Rotations tutorials]({{site.baseurl }}{{intermediate-tutorials/tutorial-17-quaternions}}) 
+회전 행렬은 매우 복잡합니다. 사용하는데 있어 정확한 레이아웃을 아는 것이 중요하지는 않기 때문에 건너 뛰도록 하겠습니다. 더 자세하게 알고 싶다면 [Matrices and Quaternions FAQ]({{site.baseurl}}/assets/faq_quaternions/index.html)를 참조하세요(유명한 자료). [Rotations tutorials]({{site.baseurl }}{{intermediate-tutorials/tutorial-17-quaternions}}) 를 참조해도 좋습니다.
 
-**In C++ :**
+**C++에서:**
 
 ``` cpp
 // Use #include <glm/gtc/matrix_transform.hpp> and #include <glm/gtx/transform.hpp>
@@ -158,42 +159,40 @@ glm::vec3 myRotationAxis( ??, ??, ??);
 glm::rotate( angle_in_degrees, myRotationAxis );
 ```
 
-## Cumulating transformations
+## 변환을 누적하기 (Cumulating transformations)
 
-So now we know how to rotate, translate, and scale our vectors. It would be great to combine these transformations. This is done by multiplying the matrices together, for instance :
+이제 벡터에 대해 회전과 이동, 크기를 변환하는 방법을 배웠습니다. 이러한 변환들을 조합한다면 멋질 것 같습니다. 이는 행렬들을 함께 곱하면 됩니다. 예를 들어.
 
 ``` cpp
 TransformedVector = TranslationMatrix * RotationMatrix * ScaleMatrix * OriginalVector;
 ```
+**!!! 주의 !!!** 이 라인은 실제로 크기 변환을 먼저 수행하며, 그 다음 회전, 그리고 평행 이동을 수행합니다. 이는 행렬 곱셈이 동작하는 방식입니다.
 
-**!!! BEWARE !!!** This lines actually performs the scaling FIRST, and THEN the rotation, and THEN the translation. This is how matrix multiplication works.
+다른 순서로 수행한다면 같은 결과를 얻을 수 없을 것입니다. 직접 해보세요.
 
-Writing the operations in another order wouldn't produce the same result. Try it yourself :
+- 한걸음 앞으로 이동한 뒤 왼쪽으로 도세요.
+- 왼쪽으로 돈 뒤 한걸음 앞으로 이동하세요.
 
-- make one step ahead ( beware of your computer ) and turn left;
+사실 이 순서는 게임 캐릭터 및 다른 아이템에 일반적으로 필요한 순서입니다. 먼저 필요한 경우 크기를 변환하고, 방향을 설정한 뒤 이동을 시키세요. 예를 들어 선박 모형이 주어진다면(단순화를 위해 회전을 제거했습니다).
 
-- turn left, and make one step ahead
+* 잘못된 방법 :
+	- 배를 (10,0,0)만큼 평행 이동합니다. 이제 배의 중심은 원점에서 10만큼 떨어져있습니다. 
+	- 배의 크기를 2배 확대합니다. 모든 좌표가 _원점에 대해 상대적으로_ 2가 곱해집니다. 종잡을 수 없이... 결국 큰 배를 얻겠지만 중심도 2*10=20이 됩니다. 원하는 바가 아닙니다.
 
-As a matter of fact, the order above is what you will usually need for game characters and other items : Scale it first if needed; then set its direction, then translate it. For instance, given a ship model (rotations have been removed for simplification) :
+* 옳은 방법 :
+	- 배를 2배 확대합니다. 큰 배를가 되었고, 중심이 원점에 있습니다.
+	- 배를 평행 이동합니다. 여전히 동일한 크기를 유지하면서도 옳바른 위치를 가집니다.
 
-* The wrong way :
-	- You translate the ship by (10,0,0). Its center is now at 10 units of the origin.
-	- You scale your ship by 2\. Every coordinate is multiplied by 2 _relative to the origin_, which is far away... So you end up with a big ship, but centered at 2*10 = 20. Which you don't want.
+행렬-행렬간의 곱셈은 행렬-벡터 간의 곱셈과 매우 유사합니다. 그러므로 자세한 내용은 생략하겠습니다. 필요하다면 [Matrices and Quaternions FAQ]({{site.baseurl}}/assets/faq_quaternions/index.html#Q11)를 참조하세요. 이제 컴퓨터에게 이 작업을 수행하도록 간단히 요청해보겠습니다. 
 
-* The right way :
-	- You scale your ship by 2\. You get a big ship, centered on the origin.
-	- You translate your ship. It's still the same size, and at the right distance.
-
-Matrix-matrix multiplication is very similar to matrix-vector multiplication, so I'll once again skip some details and redirect you the the [Matrices and Quaternions FAQ]({{site.baseurl}}/assets/faq_quaternions/index.html#Q11) if needed. For now, we'll simply ask the computer to do it :
-
-**in C++, with GLM :**
+**C++에서 GLM을 이용하여:**
 
 ``` cpp
 glm::mat4 myModelMatrix = myTranslationMatrix * myRotationMatrix * myScaleMatrix;
 glm::vec4 myTransformedVector = myModelMatrix * myOriginalVector;
 ```
 
-**in GLSL :**
+**GLSL에서:**
 
 ``` glsl
 mat4 transform = mat2 * mat1;
