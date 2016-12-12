@@ -11,7 +11,7 @@ tags: []
 ---
 {:TOC}
 
-> _엔진이 배를 움직이는 것이 아니다. 배는 그 자리에 가만히 있으며 엔진이 배를 감싸고 있는 세상을 움직인다._
+> _엔진이 배를 움직이지는 것이 아니다. 배는 그 자리에 가만히 있으며 엔진이 배를 감싸고 있는 세상을 움직이는 것이다._
 > 
 > Futurama
 
@@ -199,76 +199,74 @@ mat4 transform = mat2 * mat1;
 vec4 out_vec = transform * in_vec;
 ```
 
-# The Model, View and Projection matrices
+# 모델, 뷰, 투영 행렬 (The Model, View and Projection matrices)
 
-_For the rest of this tutorial, we will suppose that we know how to draw Blender's favourite 3d model : the monkey Suzanne._
+_이 튜토리얼의 나머지에서는 블렌더의 유명한 3D 원숭이 모델인 수잔을 그리는 법을 이미 알고 있다고 가정하겠습니다_
 
-The Model, View and Projection matrices are a handy tool to separate transformations cleanly. You may not use this (after all, that's what we did in tutorials 1 and 2). But you should. This is the way everybody does, because it's easier this way.
+모델, 뷰, 투영 행렬은 변환을 깔끔히 불리하는 편리한 도구입니다. 이걸 사용하지 않을 수도 있지만(우리가 튜토리얼 1과 2에서 한 것처럼요) 사용해야 합니다. 왜냐하면 이 방법이 가장 쉽기 때문에 모두가 사용하기 때문이에요.
 
-## The Model matrix
+## 모델 행렬 (The Model matrix)
 
-This model, just as our beloved red triangle, is defined by a set of vertices. The X,Y,Z coordinates of these vertices are defined relative to the object's center : that is, if a vertex is at (0,0,0), it is at the center of the object.
+이 모델은 우리가 좋아했던 삼각형처럼 여러 정점들의 집합으로 정의됩니다. 이 정점들의 X,Y,Z 좌표는 오브젝트의 중심으로부터 상대적인 위치를 나타냅니다. 즉 정점 (0,0,0)은 오브젝트의 중심을 나타내지요.
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/model.png)
 
-We'd like to be able to move this model, maybe because the player controls it with the keyboard and the mouse. Easy, you just learnt do do so : `translation*rotation*scale`, and done. You apply this matrix to all your vertices at each frame (in GLSL, not in C++!) and everything moves. Something that doesn't move will be at the _center of the world_.
-
+플레이어가 키보드나 마우스로 이 모델을 제어하기 때문에 어쩌면 이 모델을 이동하고 싶을 수도 있습니다. 쉽습니다. 이미 배운 것처럼 `translation*rotation*scale`를 수행하면 되지요. 매 프레임마다 이 행렬을 모든 정점에 적용하면 (GLSL에서요, C++이 아니라) 모든 것이 움직일 것입니다. 움직이지 않는 것은 _월드의 중심(Center of the world)_입니다. 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/world.png)
 
-Your vertices are now in _World Space_. This is the meaning of the black arrow in the image below : _We went from Model Space (all vertices defined relatively to the center of the model) to World Space (all vertices defined relatively to the center of the world)._
+정점들은 이제 _월드 공간(World Space)_에 존재합니다. 이것은 아래 이미지에서 검은색 화살표를 의미합니다. _우리는 모델 공간(모든 정점이 모델의 중심으로부터 상대적인 위치)에서 월드 공간(모든 정점이 월드의 중심으로부터 상대적인 위치)으로 옮겨 온 것입니다.
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/model_to_world.png)
 
-We can sum this up with the following diagram :
+다음과 같은 다이어그램으로 요약할 수 있습니다.
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/M.png)
 
-## The View matrix
+## 뷰 행렬 (The View matrix)
 
-Let's quote Futurama again :
+Futurama를 다시 인용해보죠.
 
-> _The engines don't move the ship at all. The ship stays where it is and the engines move the universe around it._
+> _엔진이 배를 움직이지는 것이 아니다. 배는 그 자리에 가만히 있으며 엔진이 배를 감싸고 있는 세상을 움직이는 것이다._
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/camera.png)
 
-When you think about it, the same applies to cameras. It you want to view a moutain from another angle, you can either move the camera... or move the mountain. While not practical in real life, this is really simple and handy in Computer Graphics.
+잘 생각해보면 카메라에도 동일하게 적용할 수 있습니다. 만약 다른 각도에서 산을 바라보고 싶으면, 카메라를 움직일 수 있겠지만... 또는 산을 움직일 수도 있겠죠. 실생활에서는 통용되지 않겠지만 컴퓨터 그래픽에서는 정말 쉽고 유용합니다.
 
-So initially your camera is at the origin of the World Space. In order to move the world, you simply introduce another matrix. Let's say you want to move your camera of 3 units to the right (+X). This is equivalent to moving your whole world (meshes included) 3 units to the LEFT ! (-X). While you brain melts, let's do it :
+처음에 카메라는 월드 공간의 원점에 위치합니다. 월드를 이동하기 위해서는 단지 새로운 행렬을 이용하면 됩니다. 카메라를 오른쪽(+X)으로 3 유닛만큼 이동한다고 해보죠. 이는 전체 월드(메쉬를 포함해)를 왼쪽(-X)으로 3 유닛 이동하는 것과 동일합니다! 잊어 버리기 전에 한번 해보죠.
 
 ``` cpp
 // Use #include <glm/gtc/matrix_transform.hpp> and #include <glm/gtx/transform.hpp>
 glm::mat4 ViewMatrix = glm::translate(-3.0f, 0.0f ,0.0f);
 ```
-
-Again, the image below illustrates this : _We went from World Space (all vertices defined relatively to the center of the world, as we made so in the previous section) to Camera Space (all vertices defined relatively to the camera)._
+또 한번 아래 이미지는 이렇게 표현됩니다. _우리는 월드 공간(모든 정점이 월드의 중심으로부터 상대적인 위치)에서 카메라 공간(모든 정점이 카메라로부터 상대적인 위치)으로 옮겨 왔습니다._
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/model_to_world_to_camera.png)
 
-Before you head explodes from this, enjoy GLM's great glm::lookAt function:
+머리가 폭발하기 전에 GLM의 멋진 glm::lookAt() 함수를 살펴보도록 하죠.
 
 ``` cpp
 glm::mat4 CameraMatrix = glm::lookAt(
-    cameraPosition, // the position of your camera, in world space
-    cameraTarget,   // where you want to look at, in world space
-    upVector        // probably glm::vec3(0,1,0), but (0,-1,0) would make you looking upside-down, which can be great too
+    cameraPosition, // 월드 공간에서의 카메라 위치.
+    cameraTarget,   // 월드 공간에서 바라보는 방향.
+    upVector        // 아마 glm::vec3(0,1,0)이겠지만, (0,-1,0)로 설정하면 위쪽을 아래쪽으로 가게 할수 있어요. 멋집니다.
 );
 ```
 
-Here's the compulsory diagram :
+여기 다이어그램이 있습니다.
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/MV.png)
 
-This is not over yet, though.
+아직 끝이 아닙니다.
 
-## The Projection matrix
+## 투영 행렬 (The Projection matrix)
 
-We're now in Camera Space. This means that after all theses transformations, a vertex that happens to have x==0 and y==0 should be rendered at the center of the screen. But we can't use only the x and y coordinates to determine where an object should be put on the screen : its distance to the camera (z) counts, too ! For two vertices with similar x and y coordinates, the vertex with the biggest z coordinate will be more on the center of the screen than the other.
+이제 우리는 카메라 공간에 있습니다. 이는 모든 변환이 완료된 후 x==0, y==0를 가지게 된 정점들이 화면 가운데에 렌더링 되어야 한다는 것을 의미합니다. 하지만 오브젝트가 화면의 어디에 그려져야 하는지 결정하는 데에 x와 y만을 사용할 수는 없습니다. 카메라와의 거리 (z) 역시 고려해야 합니다! 비슷한 x, y 좌표를 가지는 두 정점 중에 더 큰 z 좌표를 가지는 정점이 화면의 중심에 더 가깝게 그려져야 합니다.
 
-This is called a perspective projection :
+이를 원근 투영(Perspective Projection)이라고 부릅니다.
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/model_to_world_to_camera_to_homogeneous.png)
 
-And luckily for us, a 4x4 matrix can represent this projection[^projection] :
+다행히도 4x4 행렬은 이 투영을 표현할 수 있습니다.[^projection]
 
 ``` cpp
 // Generates a really hard-to-read matrix, but a normal, standard 4x4 matrix nonetheless
@@ -280,114 +278,116 @@ glm::mat4 projectionMatrix = glm::perspective(
 );
 ```
 
-One last time :
+마지막으로 한번 더,
 
-_We went from Camera Space (all vertices defined relatively to the camera) to Homogeneous Space (all vertices defined in a small cube. Everything inside the cube is onscreen)._
+_우리는 카메라 공간(모든 정점이 카메라로부터 상대적인 위치를 나타냄)으로부터 동차 공간(Homogeneous Space. 모든 정점이 작은 정육면체 안에 정의됩니다. 정육면체 안의 모든 것은 화면상에 출력됩니다)으로 옮겨 왔습니다._
 
-And the final diagram :
+최종 다이어그램은,
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/MVP.png)
 
-Here's another diagram so that you understand better what happens with this Projection stuff. Before projection, we've got our blue objects, in Camera Space, and the red shape represents the frustum of the camera : the part of the scene that the camera is actually able to see.
+여기에 투영에 대해 더 잘 이해할 수 있는 또 다른 그림이 있습니다. 투영 이전에 우리는 카메라 공간에서 파란 오브젝트들을 얻습니다. 그리고 붉은 모형은 카메라의 절두체(frustum)를 표현합니다. 카메라가 실제로 볼 수 있는 장면의 일부를 나타내죠.
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/nondeforme.png)
 
-Multiplying everything by the Projection Matrix has the following effect :
+모든 것을 투영 행렬과 곱하면 다음과 같은 효과를 가집니다.
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/homogeneous.png)
 
-In this image, the frustum is now a perfect cube (between -1 and 1 on all axes, it's a little bit hard to see it), and all blue objects have been deformed in the same way. Thus, the objects that are near the camera ( = near the face of the cube that we can't see) are big, the others are smaller. Seems like real life !
+이 그림에서 이제 절두체는 완전한 정육면체(보기가 좀 어렵지만, 모든 축의 값이 -1, 1 사이입니다)이며, 모든 파란색 오브젝트들이 같은 방법으로 변형되었습니다. 그러므로 카메라에 가까운(=보이지 않는 정육면체의 앞면과 가까운) 오브젝트들은 커지고, 그렇지 않은 오브젝트들은 작아집니다. 현실과 비슷합니다!
 
-Let's see what it looks like from the "behind" the frustum :
+절두체의 "뒤"에서 보면 다음과 같이 보일 겁니다. 
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/projected1.png)
 
-Here you get your image ! It's just a little bit too square, so another mathematical transformation is applied (this one is automatic, you don't have to do it yourself in the shader) to fit this to the actual window size :
+이제 원하는 이미지를 얻었습니다. 이 이미지는 너무 정사각형이기 때문에 실제 창 크기에 맞출 수 있게 또다른 수학적 변환을 적용합니다(이것은 자동으로 일어나기 때문에 셰이더에서 직접 할 필요는 없습니다).
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/final1.png)
 
-And this is the image that is actually rendered !
+이제 이 이미지가 실제로 렌더링 될 이미지 입니다!
 
-## Cumulating transformations : the ModelViewProjection matrix
+## 변환을 누적하기 : 모델-뷰-투영 행렬
 
-... Just a standard matrix multiplication as you already love them !
+... 너무나도 사랑스러운 표준 행렬 곱셈입니다.
 
 ``` cpp
-// C++ : compute the matrix
-glm::mat4 MVPmatrix = projection * view * model; // Remember : inverted !
+// C++ : 행렬을 계산합니다.
+glm::mat4 MVPmatrix = projection * view * model; // 기억하세요: 반대입니다!
 ```
 
 ``` glsl
-// GLSL : apply it
+// GLSL : 행렬을 적용합니다.
 transformed_vertex = MVP * in_vertex;
 ```
 {: .highlightglslfs }
 
-# Putting it all together
+# 모두 합치기
 
-* First step : generating our MVP matrix. This must be done for each model you render.
+* 1단계 : MVP 행렬을 만듭니다. 이는 그리려고 하는 모든 모델에 대해 수행되어야 합니다.
 
   ``` cpp
-  // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+  // 투영 행렬 : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
   glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) width / (float)height, 0.1f, 100.0f);
   
-  // Or, for an ortho camera :
+  // 또는 정사영(orthographic) 카메라 :
   //glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
   
-  // Camera matrix
+  // 카메라 행렬
   glm::mat4 View = glm::lookAt(
       glm::vec3(4,3,3), // Camera is at (4,3,3), in World Space
       glm::vec3(0,0,0), // and looks at the origin
       glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
       );
   
-  // Model matrix : an identity matrix (model will be at the origin)
+  // 모델 행렬 : 단위 행렬 (모델은 원점에 위치)
   glm::mat4 Model = glm::mat4(1.0f);
-  // Our ModelViewProjection : multiplication of our 3 matrices
+  // MVP(모델-뷰-프로젝션) : 세 행렬의 곱.
   glm::mat4 mvp = Projection * View * Model; // Remember, matrix multiplication is the other way around
   ```
 
-* Second step : give it to GLSL
+* 2단계: GLSL로 넘깁니다.
 
   ``` cpp
-  // Get a handle for our "MVP" uniform
-  // Only during the initialisation
+  // "MVP" 유니폼에 대한 핸들을 얻어 옵니다.
+  // 초기화 단계에서만 수행하면 됩니다.
   GLuint MatrixID = glGetUniformLocation(program_id, "MVP");
   
-  // Send our transformation to the currently bound shader, in the "MVP" uniform
-  // This is done in the main loop since each model will have a different MVP matrix (At least for the M part)
+  // "MVP" 유니폼을 통해 변환을 현재 바인딩된 셰이더로 전달합니다.
+  // 각 모델마다 다른 MVP 행렬을 가질 것이기 때문에 (최소한 M 이라도요) 이 작업은 메인 루프에서 수행됩니다.
   glUniformMatrix4fv(mvp_handle, 1, GL_FALSE, &mvp[0][0]);
   ```
 
-* Third step : use it in GLSL to transform our vertices
+* 3단계: MVP 행렬을 정점들을 변환하는데 사용합니다.
 
   ``` glsl
-  // Input vertex data, different for all executions of this shader.
+  // 입력되는 정점 데이터. 셰이더가 실행될 때마다 다른 값입니다.
   layout(location = 0) in vec3 vertexPosition_modelspace;
   
-  // Values that stay constant for the whole mesh.
+  // 모든 메쉬에 대해 동일한 값을 유지합니다.
   uniform mat4 MVP;
   
   void main(){
-    // Output position of the vertex, in clip space : MVP * position
+    // 잘려진 공간으로 정점의 위치를 출력합니다. MVP * position
     gl_Position =  MVP * vec4(vertexPosition_modelspace,1);
   }
   ```
   {: .highlightglslvs }
 
-* Done ! Here is the same triangle as in tutorial 2, still at the origin (0,0,0), but viewed in perspective from point (4,3,3), heads up (0,1,0), with a 45° field of view.
+* 끝입니다! 여기에 튜토리얼 2에서 본 것과 동일한 삼각형이 있습니다. 여전히 원점 (0,0,0)에 있지만 point (4,3,3), heads up (0,1,0), 45° field of view 의 시점에서 바라본 것입니다.
 
 ![]({{site.baseurl}}/assets/images/tuto-3-matrix/perspective_red_triangle.png)
 
 In tutorial 6 you'll learn how to modify these values dynamically using the keyboard and the mouse to create a game-like camera, but first, we'll learn how to give our 3D models some colour (tutorial 4) and textures (tutorial 5).
 
+튜토리얼 6에서 게임에 사용되는 카메라를 생성하기 위해, 이 값들을 키보드와 마우스를 통해 동적으로 변경하는 방법에 대해서 배울 것입니다. 그보다 앞서 3D 모델에 색상을 주고(튜토리얼 4), 텍스쳐를 입히는 방법(튜토리얼 5)를 배우도록 하겠습니다. 
+
 # Exercises
 
-*   Try changing the glm::perspective
-*   Instead of using a perspective projection, use an orthographic projection (glm::ortho)
-*   Modify ModelMatrix to translate, rotate, then scale the triangle
-*   Do the same thing, but in different orders. What do you notice ? What is the "best" order that you would want to use for a character ?
+*   glm::perspective를 바꿔보세요.
+*   원근 투영을 사용하는 데신 정사영 투영(glm::ortho)을 사용해 보세요.
+*   삼각형을 평행 이동하고, 회전하고, 크기를 변경하도록 모델 행렬을 수정해보세요.
+*   동일한 작업을 다른 순서로 해보세요. 무엇을 깨닫게 되나요? 무엇이 캐릭터에 사용하기에 가장 "최적"의 순서인가요?
 
 _Addendum_
 
-[^projection]: [...]luckily for us, a 4x4 matrix can represent this projection : Actually, this is not correct. A perspective transformation is not affine, and as such, can't be represented entirely by a matrix. After beeing multiplied by the ProjectionMatrix, homogeneous coordinates are divided by their own W component. This W component happens to be -Z (because the projection matrix has been crafted this way). This way, points that are far away from the origin are divided by a big Z; their X and Y coordinates become smaller; points become more close to each other, objects seem smaller; and this is what gives the perspective. This transformation is done in hardware, and is not visible in the shader.
+[^projection]: [...]다행히도 4x4 행렬은 이 투영을 표현할 수 있습니다. 사실 이 말은 옳지 않습니다. 원근 변환은 아핀이 아니기 때문에 행렬로 완전히 표현할 수 없습니다. 투영 행렬과 곱해진 이후에 동차 좌표들은 그들의 W 성분으로 나누어집니다. 이 W 성분은 바로 -Z 입니다(투영 행렬이 이러한 방법으로 작성되었기 때문에). 이러한 방법으로 원점에서 멀리 떨어진 점일 수록 더 큰 Z로 나누어지게 되어, 이러한 점들의 X와 Y 좌표는 더 작아집니다. 점들이 서로 더 가까워지고 오브젝트들은 더 작아 보입니다. 이러한 방법으로 원근이 이루어 집니니다. 이러한 변환은 하드웨어에 의해 일어나며 셰이더에서는 보이지 않습니다.
