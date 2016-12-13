@@ -10,44 +10,44 @@ order: 50
 tags: []
 ---
 
-In this tutorial, you will learn :
+이번 튜토리얼에서는 다음과 같은 것들 배울 것입니다.
 
-* What are UV coordinates
-* How to load textures yourself
-* How to use them in OpenGL
-* What is filtering and mipmapping, and how to use them
-* How to load texture more robustly with GLFW
-* What the alpha channel is
+* UV 좌표에 대하여.
+* 직접 텍스처를 로딩하는 방법
+* 이를 OpenGL에서 사용하는 방법
+* 필터과 밉맵이 무엇이며 그리고 어떻게 사용하는지
+* 알파 채널이 무엇인지
 
-# About UV coordinates
+# UV 좌표에 대하여
 
-When texturing a mesh, you need a way to tell to OpenGL which part of the image has to be used for each triangle. This is done with UV coordinates.
+메쉬에 텍스처를 입히려면 각 삼각형에 이미지의 어느 부분이 사용되어야 하는지를 OpenGL에 알려주어야 합니다. 이는 UV 좌표를 이용하여 이루어집니다.
 
-Each vertex can have, on top of its position, a couple of floats, U and V. These coordinates are used to access the texture, in the following way :
+각 정점은 자신의 위치에 U와 V 이렇게 한쌍의 실수(float)값을 가질 수 있습니다. 이 좌표는 다음과 같은 방식으로 텍스처에 접근하는데에 사용됩니다.
 
 ![]({{site.baseurl}}/assets/images/tuto-5-textured-cube/UVintro.png)
 
-Notice how the texture is distorted on the triangle.
 
-# Loading .BMP images yourself
+텍스처가 삼각형위로 어떻게 변형되는지를 잘 보세요.
 
-Knowing the BMP file format is not crucial : plenty of libraries can load BMP files for you. But it's very simple and can help you understand how things work under the hood. So we'll write a BMP file loader from scratch, so that you know how it works, <span style="text-decoration: underline;">and never use it again</span>.
+# 직접 .BMP 이미지를 불러오기
 
-Here is the declaration of the loading function :
+BMP 파일 포맷을 아는 것은 별로 중요하지 않습니다. BMP를 로딩할 수 있는 수 많은 라이브러리들이 있기 때문이죠. 하지만 매우 간단하고 또 내부에서 어떠한 일이 일어나는지를 이해하는데 도움이 될 수 있습니다. 그러므로 처음부터 BMP 파일 로더를 작성해보도록 하겠습니다. 어떻게 동작하는지 파악하는데만 사용하시고 <span style="text-decoration: underline;">다시는 사용하지 마세요</span>.
+
+여기 로딩 함수의 선언이 있습니다.
 
 ``` cpp
 GLuint loadBMP_custom(const char * imagepath);
 ```
 
-so it's used like this :
+다음과 같이 사용하죠.
 
 ``` cpp
 GLuint image = loadBMP_custom("./my_texture.bmp");
 ```
 
-Let's see how to read a BMP file, then.
+어떻게 BMP 파일을 읽어들이는지 살펴보겠습니다.
 
-First, we'll need some data. These variable will be set when reading the file.
+먼저 약간의 데이터가 필요합니다. 이러한 변수들은 파일을 읽을 때 설정 될 것 입니다.
 
 ``` cpp
 // Data read from the header of the BMP file
@@ -59,7 +59,7 @@ unsigned int imageSize;   // = width*height*3
 unsigned char * data;
 ```
 
-We now have to actually open the file
+이제 실제로 파일을 열어야겠죠.
 
 ``` cpp
 // Open the file
@@ -67,7 +67,7 @@ FILE * file = fopen(imagepath,"rb");
 if (!file){printf("Image could not be opened\n"); return 0;}
 ```
 
-The first thing in the file is a 54-bytes header. It contains information such as "Is this file really a BMP file?", the size of the image, the number of bits per pixel, etc. So let's read this header :
+파일의 첫 번째 54바이트는 헤더입니다. 헤더는 "이 파일이 정말 BMP 파일인지?", 이미지의 크기는 얼마인지, 그리고 픽셀당 비트 수 등을 담고 있습니다. 헤더를 읽어 보겠습니다.
 
 ``` cpp
 if ( fread(header, 1, 54, file)!=54 ){ // If not 54 bytes read : problem
@@ -76,11 +76,11 @@ if ( fread(header, 1, 54, file)!=54 ){ // If not 54 bytes read : problem
 }
 ```
 
-The header always begins by BM. As a matter of fact, here's what you get when you open a .BMP file in a hexadecimal editor :
+헤더는 항상 BM으로 시작합니다. 사실 .BMP 파일을 헥사 에디터로 열어보면 다음과 같을겁니다.
 
 ![]({{site.baseurl}}/assets/images/tuto-5-textured-cube/hexbmp.png)
 
-So we have to check that the two first bytes are really 'B' and 'M' :
+그러므로 처음 두 바이트가 'B'와 'M'인지를 확인합니다.
 
 ``` cpp
 if ( header[0]!='B' || header[1]!='M' ){
@@ -89,7 +89,7 @@ if ( header[0]!='B' || header[1]!='M' ){
 }
 ```
 
-Now we can read the size of the image, the location of the data in the file, etc :
+이제 파일로부터 이미지의 크기와 실제 데이터의 위치 등을 읽을 수 있습니다.
 
 ``` cpp
 // Read ints from the byte array
@@ -99,7 +99,7 @@ width      = *(int*)&(header[0x12]);
 height     = *(int*)&(header[0x16]);
 ```
 
-We have to make up some info if it's missing :
+누락된 정보가 있다면 직접 만들어야 합니다.
 
 ``` cpp
 // Some BMP files are misformatted, guess missing information
@@ -107,7 +107,7 @@ if (imageSize==0)    imageSize=width*height*3; // 3 : one byte for each Red, Gre
 if (dataPos==0)      dataPos=54; // The BMP header is done that way
 ```
 
-Now that we know the size of the image, we can allocate some memory to read the image into, and read :
+이제 이미지의 크기를 알기 때문에 이미지를 저장할 버퍼를 할당하고 읽어들입니다.
 
 ``` cpp
 // Create a buffer
@@ -120,9 +120,9 @@ fread(data,1,imageSize,file);
 fclose(file);
 ```
 
-We arrive now at the real OpenGL part. Creating textures is very similar to creating vertex buffers : Create a texture, bind it, fill it, and configure it.
+이제 실제 OpenGL 부분입니다. 텍스처를 만드는 것은 정점 버퍼를 생성하는 것과 몹시 비슷합니다. 텍스처를 만들고, 바인딩하고, 채우고, 설정합니다.
 
-In glTexImage2D, the GL_RGB indicates that we are talking about a 3-component color, and GL_BGR says how exactly it is represented in RAM. As a matter of fact, BMP does not store Red->Green->Blue but Blue->Green->Red, so we have to tell it to OpenGL.
+glTexImage2D에서 GL_RGB는 3-요소 색상을 사용한다는 것을 가리키며, GL_BGR은 RAM에 저장된 방법을 보여줍니다. 사실 BMP는 Red->Green->Blue 순서로 저장하지 않고 Blue->Green->Read 순서로 저장합니다. 그러므로 이를 OpenGL에게 알려줘야합니다.
 
 ``` cpp
 // Create one OpenGL texture
@@ -139,19 +139,19 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 ```
 
-We'll explain those last two lines later. Meanwhile, on the C++-side, you can use your new function to load a texture :
+마지막 두 줄은 나중에 설명하겠습니다. 이제 C++ 쪽에서 텍스처를 로딩하기 위해 이 함수를 사용할 수 있습니다.
 
 ``` cpp
 GLuint Texture = loadBMP_custom("uvtemplate.bmp");
 ```
 
-> Another very important point :** use power-of-two textures !**
+> 매우 중요한 부분 :** 2의 제곱인 텍스처를 사용해야 합니다!**
 > 
-> * good : 128\*128, 256\*256, 1024\*1024, 2\*2...
-> * bad : 127\*128, 3\*5, ...
-> * okay but weird : 128\*256
+> * 좋음 : 128\*128, 256\*256, 1024\*1024, 2\*2...
+> * 나쁨 : 127\*128, 3\*5, ...
+> * 괜찮지만 이상함 : 128\*256
 
-# Using the texture in OpenGL
+# OpenGL에서 텍스처 사용하기
 
 We'll have a look at the fragment shader first. Most of it is straightforward :
 
