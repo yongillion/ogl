@@ -153,7 +153,7 @@ GLuint Texture = loadBMP_custom("uvtemplate.bmp");
 
 # OpenGL에서 텍스처 사용하기
 
-We'll have a look at the fragment shader first. Most of it is straightforward :
+프래그먼트 셰이더를 먼저 살펴보겠습니다. 대부분은 어렵지 않습니다.
 
 ``` glsl
 #version 330 core
@@ -177,12 +177,13 @@ void main(){
 {: .highlightglslfs }
 
 Three things :
+세 가지:
 
-* The fragment shader needs UV coordinates. Seems fair.
-* It also needs a "sampler2D" in order to know which texture to access (you can access several texture in the same shader)
-* Finally, accessing a texture is done with texture(), which gives back a (R,G,B,A) vec4. We'll see about the A shortly.
+* 프래그먼트 셰이더는 UV 좌표가 필요합니다. 당연하게도요.
+* 어떠한 텍스처에 접근해야 하는지를 알기 위해 "sampler2D" 또한 필요합니다(같은 셰이더에서 여러개의 텍스처에 접근할 수 있습니다).
+* 끝으로 텍스처에 접근하는 것은 (R,G,B,A)를 반환하는 texture()를 통해 수행할 수 있습니다. 곧 보게 될 겁니다.
 
-The vertex shader is simple too, you just have to pass the UVs to the fragment shader :
+정점 셰이더도 간단합니다. UV를 프래그먼트 셰이더로 전달합니다.
 
 ``` glsl
 #version 330 core
@@ -209,7 +210,7 @@ void main(){
 
 {: .highlightglslvs }
 
-Remember "layout(location = 1) in vec2 vertexUV" from Tutorial 4 ? Well, we'll have to do the exact same thing here, but instead of giving a buffer (R,G,B) triplets, we'll give a buffer of (U,V) pairs.
+튜토리얼 4에서 "layout(location = 1) in vec2 vertexUV"을 기억하시나요? 자, 완전히 동일한 작업을 여기서 할건데요, (R,G,B) 버퍼를 제공하는  대신 (U,V) 버퍼를 제공할 것입니다. 
 
 ``` cpp
 // Two UV coordinatesfor each vertex. They were created with Blender. You'll learn shortly how to do this yourself.
@@ -253,74 +254,76 @@ static const GLfloat g_uv_buffer_data[] = {
 };
 ```
 
-The UV coordinates above correspond to the following model :
+위 UV 좌표는 다음 모델에 대응됩니다. 
 
 ![](http://www.opengl-tutorial.org/assets/images/tuto-5-textured-cube/uv_mapping_blender.png)
 
-The rest is obvious. Generate the buffer, bind it, fill it, configure it, and draw the Vertex Buffer as usual. Just be careful to use 2 as the second parameter (size) of glVertexAttribPointer instead of 3.
+남은 것은 명백합니다. 버퍼를 만들고, 바인드 하고, 채운 후, 설정하고, 정점 버퍼를 그립니다. glVertexAttribPointer의 두 번째 파라미터(size)에 3 대신 2를 사용하는 것을 주의합니다.
 
-This is the result :
+결과입니다.
 
 ![](http://www.opengl-tutorial.org/assets/images/tuto-5-textured-cube/nearfiltering.png)
 
-and a zoomed-in version :
+줌인 버전이고요.
 
 ![](http://www.opengl-tutorial.org/assets/images/tuto-5-textured-cube/nearfiltering_zoom.png)
 
-# What is filtering and mipmapping, and how to use them
+# 필터링과 밉맵 사용법
 
-As you can see in the screenshot above, the texture quality is not that great. This is because in loadBMP_custom, we wrote :
+위 스크린샷에서 보듯이 텍스처 품질이 썩 좋지 않습니다. 이유는 loadBMP_custom에서 다음과 같이 작성했기 때문입니다.
 
 ``` cpp
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 ```
 
-This means that in our fragment shader, texture() takes the texel that is at the (U,V) coordinates, and continues happily.
+이는 프래그먼트 셰이더에서 texture()가 (U,V)좌표에 있는 텍셀을 취한다는 것을 의미합니다.
 
 ![](http://www.opengl-tutorial.org/assets/images/tuto-5-textured-cube/nearest.png)
 
-There are several things we can do to improve this.
+이를 개선하기 위한 여러가지 방법이 있습니다.
 
-## Linear filtering
+## 선형 필터링 (Linear filtering)
 
-With linear filtering, texture() also looks at the other texels around, and mixes the colours according to the distance to each center. This avoids the hard edges seen above.
+선형 필터링에서는 texture()가 주변 텍셀들도 같이 고려합니다. 그리고 각 센터와의 거리에 따라 색상이 섞이게 됩니다. 이를 통해 위에서 본 것과 같은 하드-엣지를 피할 수 있습니다.  
 
 ![](http://www.opengl-tutorial.org/assets/images/tuto-5-textured-cube/linear1.png)
 
-This is much better, and this is used a lot, but if you want very high quality you can also use anisotropic filtering, which is a bit slower.
+훨씬 낫군요. 이것은 매우 많이 사용됩니다. 만약 매우 높은 품질을 얻고 싶다면 이방성 필터링을 사용할 수도 있습니다. 매우 느리지만요.
 
-## Anisotropic filtering
+## 이방성 필터링 (Anisotropic filtering)
 
-This one approximates the  part of the image that is really seen through the fragment. For instance, if the following texture is seen from the side, and a little bit rotated, anisotropic filtering will compute the colour contained in the blue rectangle by taking a fixed number of samples (the "anisotropic level") along its main direction.
+이방성 필터링은 프래그먼트를 통해 실제로 보여지는 이미지 부분의 근사치를 구합니다. 예를 들어 아래와 같은 텍스처가 약간 돌아가고 옆에서 보여지게 된다면, 이방성 필터링은 주 방향을 따라서 파란 직사각형 안에 포함된 색상을 고정된 샘플의 수(이방성 필터링 레벨)만큼 취해서 계산 할 것입니다.  
 
 ![](http://www.opengl-tutorial.org/assets/images/tuto-5-textured-cube/aniso.png)
 
-## Mipmaps
+## 밉맵 (Mipmaps)
 
-Both linear and anisotropic filtering have a problem. If the texture is seen from far away, mixing only 4 texels won't be enough. Actually, if your 3D model is so far away than it takes only 1 fragment on screen, ALL the texels of the image should be averaged to produce the final color. This is obviously not done for performance reasons. Instead, we introduce MipMaps :
+선형과 이방성 필터링은 모두 문제가 있습니다. 텍스처가 매우 멀리서 보여지게 되면 4개의 텍셀만으로는 충분치 않습니다. 실제로 3D 모델이 아주 멀리 있어 화면상의 한 프래그먼트만 차지하게 된다면, 최종 색상을 구하기 위해 이미지의 모든 텍셀들의 평균을 계산해야 합니다. 이는 성능상의 이유로 수행할 수 없음이 분명합니다. 대신 밉맵을 소개합니다. 
 
 ![](http://upload.wikimedia.org/wikipedia/commons/5/5c/MipMap_Example_STS101.jpg)
 
 * At initialisation time, you scale down your image by 2, successively, until you only have a 1x1 image (which effectively is the average of all the texels in the image)
-* When you draw a mesh, you select which mipmap is the more appropriate to use given how big the texel should be.
-* You sample this mipmap with either nearest, linear or anisotropic filtering
-* For additional quality, you can also sample two mipmaps and blend the results.
+* 초기화 시간에 이미지를 1/2로 줄입니다. 잇따라서 1x1 크기의 이미지(사실상 이미지내 모든 텍셀들의 평균)를 얻을 때까지 반복합니다.
+* 메시를 그릴 때 텍셀이 얼마나 커야하는지를 고려하여 적절한 밉맵을 선택합니다.
+* Nearest, 선형, 이방성 필터링 중에 하나를 사용해 밉맵을 샘플링합니다.
+* 추가적인 품질을 위해 두 개의 밉맵을 샘플링해서 그 결과를 섞을 수도 있습니다.
 
-Luckily, all this is very simple to do, OpenGL does everything for us provided that you ask him nicely :
+다행이도 이 모든 작업을 매우 간단하게 수행할 수 있습니다. OpenGL에게 친절히 요청하면 모든 것들을 수행해 줄 것입니다.  
 
 ``` cpp
-// When MAGnifying the image (no bigger mipmap available), use LINEAR filtering
+// 이미지를 확대할 때(더 큰 밉맵이 없을 때), 선형 필터링을 사용합니다.
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 // When MINifying the image, use a LINEAR blend of two mipmaps, each filtered LINEARLY too
+// 이미지를 축소할 때 두개의 밉맵을 선형으로 섞으며, 각각은 선형 필터링을 사용합니다.
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-// Generate mipmaps, by the way.
+// 밉맵을 생성합니다.
 glGenerateMipmap(GL_TEXTURE_2D);
 ```
 
-# How to load texture with GLFW
+# GLFW로 텍스처 로딩하는 방법
 
-Our loadBMP_custom function is great because we made it ourselves, but using a dedicated library is better. GLFW2 can do that too (but only for TGA files, and this feature has been removed in GLFW3, that we now use) :
+loadBMP_custom 함수는 우리가 직접 만들었다는 점에서 대단하긴하지만 전용 라이브러리를 사용하는 것이 더 좋습니다. GLFW2 역시 이 작업을 수행할 수 있습니다(하지만 TGA 파일만 가능하며, 지금 우리가 사용하는 GLFW3에서 이 기능은 제거되었습니다).
 
 ``` cpp
 GLuint loadTGA_glfw(const char * imagepath){
@@ -347,31 +350,31 @@ GLuint loadTGA_glfw(const char * imagepath){
 }
 ```
 
-# Compressed Textures
+# 압축된 텍스처
 
-At this point, you're probably wondering how to load JPEG files instead of TGA.
+이 시점에서 TGA 대신 JPEG를 로딩하는 방법이 궁금할 수도 있습니다.
 
-Short answer : don't. GPUs can't understand JPEG. So you'll compress your original image in JPEG, and decompress it so that the GPU can understand it. You're back to raw images, but you lost image quality while compressing to JPEG.
+간단히 말하면 하지 마십시오. GPU는 JPEG을 이해하지 못합니다. 그러므로 원래 이미지를 JPEG로 압축했다면, GPU가 이해할 수 있도록 압축을 해제해야 합니다. RAW 이미지를 얻겠지만 JPEG로 압축함으로 인한 이미지 품질 손실이 나타날 것입니다.
 
-There's a better option.
+여기 더 좋은 옵션이 있습니다.
 
 ## Creating compressed textures
 
 
-* Download [The Compressonator](http://developer.amd.com/Resources/archive/ArchivedTools/gpu/compressonator/Pages/default.aspx), an AMD tool
-* Load a Power-Of-Two texture in it
-* Generate mipmaps so that you won't have to do it on runtime
-* Compress it in DXT1, DXT3 or in DXT5 (more about the differences between the various formats on [Wikipedia](http://en.wikipedia.org/wiki/S3_Texture_Compression)) :
+* AMD 툴인 [The Compressonator](http://developer.amd.com/Resources/archive/ArchivedTools/gpu/compressonator/Pages/default.aspx), 를 다운로드 받습니다.
+* 2의 거듭제곱인 텍스처를 불러옵니다.
+* 밉맵을 생성합니다. 그러면 런타임에 이를 수행할 필요가 없습니다.
+* DXT1이나 DXT3 또는 DXT5로 압축합니다(각종 포맷들의 차이점을 알고 싶다면 [Wikipedia](http://en.wikipedia.org/wiki/S3_Texture_Compression)).
 
 ![](http://www.opengl-tutorial.org/assets/images/tuto-5-textured-cube/TheCompressonator.png)
 
-* Export it as a .DDS file.
+* .DDS 파일로 추출.
 
-At this point, your image is compressed in a format that is directly compatible with the GPU. Whenever calling texture() in a shader, it will uncompress it on-the-fly. This can seem slow, but since it takes a LOT less memory, less data needs to be transferred. But memory transfers are expensive; and texture decompression is free (there is dedicated hardware for that). Typically, using texture compression yields a 20% increase in performance. So you save on performance and memory, at the expense of reduced quality.
+이 시점에서 이미지는 GPU와 직접 호환되는 포맷으로 압축되었습니다. 셰이더에서 texture()가 호출될 때마다 실시간으로 압축이 해제 될 것입니다. 느려 보이겠지만 적은 양의 메모리를 사용하기 때문에 적은 양의 데이터만 전송하면 됩니다. 메모리 전송은 비용은 매우 큽니다. 그리고 텍스처 압축해제는 공짜입니다(이를 위한 전용 하드웨어가 있으니까요). 일반적으로 텍스처를 압축하면 성능이 20% 정도 증가합니다. 그러므로 품질은 낮추는 것으로 성능과 메모리를 절약할 수 있습니다.
 
-## Using the compressed texture
+## 압축된 텍스처 사용하기
 
-Let's see how to load the image. It's very similar to the BMP code, except that the header is organized differently :
+이미지를 로딩하는 방법을 살펴보겠습니다. 헤더가 다르게 구성되었다는 것을 제외하고는 BMP 코드와 매우 유사합니다.
 
 ``` cpp
 GLuint loadDDS(const char * imagepath){
@@ -403,8 +406,7 @@ GLuint loadDDS(const char * imagepath){
     unsigned int fourCC      = *(unsigned int*)&(header[80]);
 ```
 
-After the header is the actual data : all the mipmap levels, successively. We can read them all in one batch :
-
+헤더 이후에는 실제 데이터인 모든 밉맵 레벨들이 연속적으로 위치합니다. 모두 한번에 읽을 수 있습니다. 
  
 
 ``` cpp
@@ -418,7 +420,7 @@ After the header is the actual data : all the mipmap levels, successively. We ca
     fclose(fp);
 ```
 
-Here we'll deal with 3 different formats : DXT1, DXT3 and DXT5. We need to convert the "fourCC" flag into a value that OpenGL understands.
+세 가지 포맷 중에 하나를 다룹니다. DXT1, DXT3, DXT5. "fourCC" 플래그를 OpenGL이 이해할 수 있는 값으로 변경 할 필요가 있습니다.  
 
 ``` cpp
     unsigned int components  = (fourCC == FOURCC_DXT1) ? 3 : 4;
@@ -440,7 +442,7 @@ Here we'll deal with 3 different formats : DXT1, DXT3 and DXT5. We need to conve
     }
 ```
 
-Creating the texture is done as usual :
+지금까지 해온 것 처럼 텍스처를 생성합니다.
 
 ``` cpp
     // Create one OpenGL texture
@@ -451,7 +453,7 @@ Creating the texture is done as usual :
     glBindTexture(GL_TEXTURE_2D, textureID);
 ```
 
-And now, we just have to fill each mipmap one after another :
+이제 밉맵을 잇따라서 채웁니다.
 
 ``` cpp
     unsigned int blockSize = (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT) ? 8 : 16;
@@ -473,25 +475,25 @@ And now, we just have to fill each mipmap one after another :
     return textureID;
 ```
 
-## Inversing the UVs
+## UV 뒤집기 (Inversing the UVs)
 
-DXT compression comes from the DirectX world, where the V texture coordinate is inversed compared to OpenGL. So if you use compressed textures, you'll have to use ( coord.u, 1.0-coord.v) to fetch the correct texel. You can do this whenever you want : in your export script, in your loader, in your shader...
-
-# Conclusion
-
-You just learnt to create, load and use textures in OpenGL.
-
-In general, you should only use compressed textures, since they are smaller to store, almost instantaneous to load, and faster to use; the main drawback it that you have to convert your images through The Compressonator (or any similar tool)
-
-# Exercices
+DXT 압축은 V 텍스처 좌표가 뒤집어져잇는 DirectX 세계에서 왔습니다. 그러므로 텍스처를 압축하면 정확한 텍셀을 얻기 위해서 (coord.u, 1.0-coord.v)를 사용해야 합니다. 이 작업은 원하는 곳 어디서나 할 수 있습니다. 스크립트나 로더, 셰이더...
 
 
-* The DDS loader is implemented in the source code, but not the texture coordinate modification. Change the code at the appropriate place to display the cube correctly.
-* Experiment with the various DDS formats. Do they give different result ? Different compression ratios ?
-* Try not to generate mipmaps in The Compressonator. What is the result ? Give 3 different ways to fix this.
+# 결론
+
+이제 OpenGL에서 텍스처를 생성하고 로드하고 사용하는 방법을 배웠습니다.
+
+일반적으로는 압축된 텍스처만을 사용합니다. 더 작고, 거의 즉시 로드할 수 있으며, 사용하기 빠르기 때문이죠. 단점은 이미지를 Compressonator(또는 유사한 툴)을 통해 압축해야 하는 것이죠.
+
+# 연습
+
+* 소스코드에 DDS 로더는 구현되었지만 텍스처 좌표 수정은 없습니다. 정육면체를 올바르게 출력하기 위해 적합한 위치의 코드를 수정하세요.
+* 다양한 DDS 포맷들을 사용해 보세요. 다른 결과가 나오나요? 압축률은 어떤가요?
+* Compressonator에서 밉맵을 생성하지 말아 보세요. 결과가 어떤가요? 이를 수정하기 위한 세가지 방법을 제시하세요.
 
 
-# References
+# 참조
 
 
 * [Using texture compression in OpenGL](http://www.oldunreal.com/editing/s3tc/ARB_texture_compression.pdf) , S&eacute;bastien Domine, NVIDIA
