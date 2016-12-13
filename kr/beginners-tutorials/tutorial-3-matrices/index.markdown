@@ -40,13 +40,13 @@ tags: []
 
 간단히 말해 행렬은 미리 정의된 개수의 행(Row)과 열(Column)만큼의 숫자 배열입니다. 예를 들어 2x3 행렬은 다음과 같이 생겼습니다.
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/2X3.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/2X3.png)
 
 3D 그래픽에서는 대부분 4x4 행렬을 사용합니다. 이 행렬은 (x,y,z,w) 정점들을 변환(Transformation)할 수 있게 해줍니다. 정점에 행렬을 곱함으로써 수행할 수 있습니다.
 
 **행렬 x 정점 (이 순서대로 !!) = 변환 된 정점**
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/MatrixXVect.gif)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/MatrixXVect.gif)
 
 보기보다 무섭진 않습니다. 왼쪽 손가락을 a에 두고, 오른쪽 손가락을 x에 두세요. 이것이 _ax_ 입니다. 왼쪽 손가락을 다음 숫자인 (b)로 옮기세요. 그리고 오른쪽 손가락을 다음 숫자인 (y)로 옮기세요. 이것이 _by_ 입니다. 다시 한번 _cz_, 또 다시 한번 _dw_. ax + by + cz + dw. 새로운 x를 얻었습니다! 각 줄에 같은 작업을 수행하면 새로운 (x,y,z,w) 벡터를 얻을 수 있습니다.
 
@@ -76,13 +76,13 @@ vec4 transformedVector = myMatrix * myVector; // 네, GLM과 아주 비슷합니
 
 이것은 이해하기 가장 쉬운 변환 행렬입니다. 평행 이동 행렬은 다음과 같이 생겼습니다. 
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/translationMatrix.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/translationMatrix.png)
 
 X,Y,Z는 위치에 더하고자 하는 값입니다.
 
 그래서 만약 벡터 (10,10,10,1)을 X 방향으로 10만큼 이동시키고자 한다면 다음과 같습니다.
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/translationExamplePosition1.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/translationExamplePosition1.png)
 
 (해보세요! 해보오오세요!)
 
@@ -90,7 +90,7 @@ X,Y,Z는 위치에 더하고자 하는 값입니다.
 
 이제 -z 축으로의 방향을 나타내는 벡터 (0,0,-1,0)의 경우 어떤 일이 일어나는지 살펴보죠.
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/translationExampleDirection1.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/translationExampleDirection1.png)
 
 원래의 방향(0,0,-1,0)입니다. 훌륭하군요. 이전에 말했듯이 방향을 이동한다는 것은 말이 안되기 때문입니다.
 
@@ -118,7 +118,7 @@ vec4 transformedVector = myMatrix * myVector;
 
 이것은 특별합니다. 아무것도 하지 않습니다. 그러나 A 곱하기 1.0은 A라는 사실을 아는 것만큼 중요하기 때문에 언급합니다.
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/identityExample.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/identityExample.png)
 
 **C++ 에서:**
 
@@ -130,11 +130,11 @@ glm::mat4 myIdentityMatrix = glm::mat4(1.0f);
 
 크기 변환 행렬 역시 매우 쉽습니다.
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/scalingMatrix.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/scalingMatrix.png)
 
 따라서 벡터(위치든 방향이든 상관 없습니다)의 크기를 모든 방향에 대해 두배 늘리고 싶다면 다음과 같습니다.
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/scalingExample.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/scalingExample.png)
 
 그리고 w는 여전히 변하지 않았습니다. 다음과 같은 질문을 할 수 있습니다. "방향의 크기를 조절한다"는것이 무슨 의미인가요? 글쎄요. 가끔, 별로, 일반적으로는 이렇게 하지 않지만, (아주 드물게) 몇명 경우에는 도움이 될 수 있습니다.
 
@@ -149,7 +149,7 @@ glm::mat4 myScalingMatrix = glm::scale(2.0f, 2.0f ,2.0f);
 
 ## 회전 행렬(Rotation matrices)
 
-회전 행렬은 매우 복잡합니다. 사용하는데 있어 정확한 레이아웃을 아는 것이 중요하지는 않기 때문에 건너 뛰도록 하겠습니다. 더 자세하게 알고 싶다면 [Matrices and Quaternions FAQ]({{site.baseurl}}/assets/faq_quaternions/index.html)를 참조하세요(유명한 자료). [Rotations tutorials]({{site.baseurl }}{{intermediate-tutorials/tutorial-17-quaternions}}) 를 참조해도 좋습니다.
+회전 행렬은 매우 복잡합니다. 사용하는데 있어 정확한 레이아웃을 아는 것이 중요하지는 않기 때문에 건너 뛰도록 하겠습니다. 더 자세하게 알고 싶다면 [Matrices and Quaternions FAQ](http://www.opengl-tutorial.org/assets/faq_quaternions/index.html)를 참조하세요(유명한 자료). [Rotations tutorials]({{site.baseurl }}{{intermediate-tutorials/tutorial-17-quaternions}}) 를 참조해도 좋습니다.
 
 **C++에서:**
 
@@ -183,7 +183,7 @@ TransformedVector = TranslationMatrix * RotationMatrix * ScaleMatrix * OriginalV
 	- 배를 2배 확대합니다. 큰 배를가 되었고, 중심이 원점에 있습니다.
 	- 배를 평행 이동합니다. 여전히 동일한 크기를 유지하면서도 옳바른 위치를 가집니다.
 
-행렬-행렬간의 곱셈은 행렬-벡터 간의 곱셈과 매우 유사합니다. 그러므로 자세한 내용은 생략하겠습니다. 필요하다면 [Matrices and Quaternions FAQ]({{site.baseurl}}/assets/faq_quaternions/index.html#Q11)를 참조하세요. 이제 컴퓨터에게 이 작업을 수행하도록 간단히 요청해보겠습니다. 
+행렬-행렬간의 곱셈은 행렬-벡터 간의 곱셈과 매우 유사합니다. 그러므로 자세한 내용은 생략하겠습니다. 필요하다면 [Matrices and Quaternions FAQ](http://www.opengl-tutorial.org/assets/faq_quaternions/index.html#Q11)를 참조하세요. 이제 컴퓨터에게 이 작업을 수행하도록 간단히 요청해보겠습니다. 
 
 **C++에서 GLM을 이용하여:**
 
@@ -209,18 +209,18 @@ _이 튜토리얼의 나머지에서는 블렌더의 유명한 3D 원숭이 모�
 
 이 모델은 우리가 좋아했던 삼각형처럼 여러 정점들의 집합으로 정의됩니다. 이 정점들의 X,Y,Z 좌표는 오브젝트의 중심으로부터 상대적인 위치를 나타냅니다. 즉 정점 (0,0,0)은 오브젝트의 중심을 나타내지요.
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/model.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/model.png)
 
 플레이어가 키보드나 마우스로 이 모델을 제어하기 때문에 어쩌면 이 모델을 이동하고 싶을 수도 있습니다. 쉽습니다. 이미 배운 것처럼 `translation*rotation*scale`를 수행하면 되지요. 매 프레임마다 이 행렬을 모든 정점에 적용하면 (GLSL에서요, C++이 아니라) 모든 것이 움직일 것입니다. 움직이지 않는 것은 _월드의 중심(Center of the world)_입니다. 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/world.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/world.png)
 
 정점들은 이제 _월드 공간(World Space)_에 존재합니다. 이것은 아래 이미지에서 검은색 화살표를 의미합니다. _우리는 모델 공간(모든 정점이 모델의 중심으로부터 상대적인 위치)에서 월드 공간(모든 정점이 월드의 중심으로부터 상대적인 위치)으로 옮겨 온 것입니다.
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/model_to_world.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/model_to_world.png)
 
 다음과 같은 다이어그램으로 요약할 수 있습니다.
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/M.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/M.png)
 
 ## 뷰 행렬 (The View matrix)
 
@@ -228,7 +228,7 @@ Futurama를 다시 인용해보죠.
 
 > _엔진이 배를 움직이지는 것이 아니다. 배는 그 자리에 가만히 있으며 엔진이 배를 감싸고 있는 세상을 움직이는 것이다._
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/camera.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/camera.png)
 
 잘 생각해보면 카메라에도 동일하게 적용할 수 있습니다. 만약 다른 각도에서 산을 바라보고 싶으면, 카메라를 움직일 수 있겠지만... 또는 산을 움직일 수도 있겠죠. 실생활에서는 통용되지 않겠지만 컴퓨터 그래픽에서는 정말 쉽고 유용합니다.
 
@@ -240,7 +240,7 @@ glm::mat4 ViewMatrix = glm::translate(-3.0f, 0.0f ,0.0f);
 ```
 또 한번 아래 이미지는 이렇게 표현됩니다. _우리는 월드 공간(모든 정점이 월드의 중심으로부터 상대적인 위치)에서 카메라 공간(모든 정점이 카메라로부터 상대적인 위치)으로 옮겨 왔습니다._
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/model_to_world_to_camera.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/model_to_world_to_camera.png)
 
 머리가 폭발하기 전에 GLM의 멋진 glm::lookAt() 함수를 살펴보도록 하죠.
 
@@ -254,7 +254,7 @@ glm::mat4 CameraMatrix = glm::lookAt(
 
 여기 다이어그램이 있습니다.
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/MV.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/MV.png)
 
 아직 끝이 아닙니다.
 
@@ -264,7 +264,7 @@ glm::mat4 CameraMatrix = glm::lookAt(
 
 이를 원근 투영(Perspective Projection)이라고 부릅니다.
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/model_to_world_to_camera_to_homogeneous.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/model_to_world_to_camera_to_homogeneous.png)
 
 다행히도 4x4 행렬은 이 투영을 표현할 수 있습니다.[^projection]
 
@@ -284,25 +284,25 @@ _우리는 카메라 공간(모든 정점이 카메라로부터 상대적인 위
 
 최종 다이어그램은,
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/MVP.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/MVP.png)
 
 여기에 투영에 대해 더 잘 이해할 수 있는 또 다른 그림이 있습니다. 투영 이전에 우리는 카메라 공간에서 파란 오브젝트들을 얻습니다. 그리고 붉은 모형은 카메라의 절두체(frustum)를 표현합니다. 카메라가 실제로 볼 수 있는 장면의 일부를 나타내죠.
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/nondeforme.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/nondeforme.png)
 
 모든 것을 투영 행렬과 곱하면 다음과 같은 효과를 가집니다.
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/homogeneous.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/homogeneous.png)
 
 이 그림에서 이제 절두체는 완전한 정육면체(보기가 좀 어렵지만, 모든 축의 값이 -1, 1 사이입니다)이며, 모든 파란색 오브젝트들이 같은 방법으로 변형되었습니다. 그러므로 카메라에 가까운(=보이지 않는 정육면체의 앞면과 가까운) 오브젝트들은 커지고, 그렇지 않은 오브젝트들은 작아집니다. 현실과 비슷합니다!
 
 절두체의 "뒤"에서 보면 다음과 같이 보일 겁니다. 
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/projected1.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/projected1.png)
 
 이제 원하는 이미지를 얻었습니다. 이 이미지는 너무 정사각형이기 때문에 실제 창 크기에 맞출 수 있게 또다른 수학적 변환을 적용합니다(이것은 자동으로 일어나기 때문에 셰이더에서 직접 할 필요는 없습니다).
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/final1.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/final1.png)
 
 이제 이 이미지가 실제로 렌더링 될 이미지 입니다!
 
@@ -375,7 +375,7 @@ transformed_vertex = MVP * in_vertex;
 
 * 끝입니다! 여기에 튜토리얼 2에서 본 것과 동일한 삼각형이 있습니다. 여전히 원점 (0,0,0)에 있지만 point (4,3,3), heads up (0,1,0), 45° field of view 의 시점에서 바라본 것입니다.
 
-![]({{site.baseurl}}/assets/images/tuto-3-matrix/perspective_red_triangle.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-3-matrix/perspective_red_triangle.png)
 
 In tutorial 6 you'll learn how to modify these values dynamically using the keyboard and the mouse to create a game-like camera, but first, we'll learn how to give our 3D models some colour (tutorial 4) and textures (tutorial 5).
 

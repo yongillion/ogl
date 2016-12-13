@@ -24,7 +24,7 @@ tags: []
 
 각 정점은 자신의 위치에 U와 V 이렇게 한쌍의 실수(float)값을 가질 수 있습니다. 이 좌표는 다음과 같은 방식으로 텍스처에 접근하는데에 사용됩니다.
 
-![]({{site.baseurl}}/assets/images/tuto-5-textured-cube/UVintro.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-5-textured-cube/UVintro.png)
 
 
 텍스처가 삼각형위로 어떻게 변형되는지를 잘 보세요.
@@ -78,7 +78,7 @@ if ( fread(header, 1, 54, file)!=54 ){ // If not 54 bytes read : problem
 
 헤더는 항상 BM으로 시작합니다. 사실 .BMP 파일을 헥사 에디터로 열어보면 다음과 같을겁니다.
 
-![]({{site.baseurl}}/assets/images/tuto-5-textured-cube/hexbmp.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-5-textured-cube/hexbmp.png)
 
 그러므로 처음 두 바이트가 'B'와 'M'인지를 확인합니다.
 
@@ -255,17 +255,17 @@ static const GLfloat g_uv_buffer_data[] = {
 
 The UV coordinates above correspond to the following model :
 
-![]({{site.baseurl}}/assets/images/tuto-5-textured-cube/uv_mapping_blender.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-5-textured-cube/uv_mapping_blender.png)
 
 The rest is obvious. Generate the buffer, bind it, fill it, configure it, and draw the Vertex Buffer as usual. Just be careful to use 2 as the second parameter (size) of glVertexAttribPointer instead of 3.
 
 This is the result :
 
-![]({{site.baseurl}}/assets/images/tuto-5-textured-cube/nearfiltering.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-5-textured-cube/nearfiltering.png)
 
 and a zoomed-in version :
 
-![]({{site.baseurl}}/assets/images/tuto-5-textured-cube/nearfiltering_zoom.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-5-textured-cube/nearfiltering_zoom.png)
 
 # What is filtering and mipmapping, and how to use them
 
@@ -278,7 +278,7 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 This means that in our fragment shader, texture() takes the texel that is at the (U,V) coordinates, and continues happily.
 
-![]({{site.baseurl}}/assets/images/tuto-5-textured-cube/nearest.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-5-textured-cube/nearest.png)
 
 There are several things we can do to improve this.
 
@@ -286,7 +286,7 @@ There are several things we can do to improve this.
 
 With linear filtering, texture() also looks at the other texels around, and mixes the colours according to the distance to each center. This avoids the hard edges seen above.
 
-![]({{site.baseurl}}/assets/images/tuto-5-textured-cube/linear1.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-5-textured-cube/linear1.png)
 
 This is much better, and this is used a lot, but if you want very high quality you can also use anisotropic filtering, which is a bit slower.
 
@@ -294,7 +294,7 @@ This is much better, and this is used a lot, but if you want very high quality y
 
 This one approximates the  part of the image that is really seen through the fragment. For instance, if the following texture is seen from the side, and a little bit rotated, anisotropic filtering will compute the colour contained in the blue rectangle by taking a fixed number of samples (the "anisotropic level") along its main direction.
 
-![]({{site.baseurl}}/assets/images/tuto-5-textured-cube/aniso.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-5-textured-cube/aniso.png)
 
 ## Mipmaps
 
@@ -363,7 +363,7 @@ There's a better option.
 * Generate mipmaps so that you won't have to do it on runtime
 * Compress it in DXT1, DXT3 or in DXT5 (more about the differences between the various formats on [Wikipedia](http://en.wikipedia.org/wiki/S3_Texture_Compression)) :
 
-![]({{site.baseurl}}/assets/images/tuto-5-textured-cube/TheCompressonator.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-5-textured-cube/TheCompressonator.png)
 
 * Export it as a .DDS file.
 

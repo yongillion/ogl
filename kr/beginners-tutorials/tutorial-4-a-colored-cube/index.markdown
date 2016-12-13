@@ -199,15 +199,15 @@ void main(){
 
 우리가 얻은 결과물입니다.
 
-![]({{site.baseurl}}/assets/images/tuto-4-colored-cube/missing_z_buffer.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-4-colored-cube/missing_z_buffer.png)
 
 으악. 괴상하네요. 무슨 일이 벌어졌는지 이해하기 위해 "먼" 삼각형과 "가까운" 삼각형을 그릴 때 어떤 일이 발생하는지 살펴보도록 하죠.
 
-![]({{site.baseurl}}/assets/images/tuto-4-colored-cube/FarNear.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-4-colored-cube/FarNear.png)
 
 좋습니다. 이제 "먼" 삼각형을 나중에 그리면 어떻게 될까요?
 
-![]({{site.baseurl}}/assets/images/tuto-4-colored-cube/NearFar.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-4-colored-cube/NearFar.png)
 
 "가까운" 것보다 위에 그려져 버렸습니다. 더 뒤에 있는데도 불구하고 말이죠. 이것이 바로 우리 정육면체에 발생한 일입니다. 일부 면은 가려지기를 바랬지만 이 면들이 더 나중에 그려지는 바람에 앞에 보여지게 된 것입니다. 이를 해결하기 위해 Z-버퍼를 호출해 보죠!
 
@@ -237,7 +237,7 @@ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 이 모든 문제를 해결하는데 이 정도면 충분합니다.
 
-![]({{site.baseurl}}/assets/images/tuto-4-colored-cube/one_color_per_vertex.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-4-colored-cube/one_color_per_vertex.png)
 
 # 연습
 

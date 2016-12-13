@@ -65,7 +65,7 @@ static const GLfloat g_vertex_buffer_data[] = {
 
 첫 번째 정점은 (-1,-1,0)입니다. 이는 우리가 어떠한 방법으로 변환하지 않는 한, 화면상의 (-1,-1)에 출력될 것이라는 것을 의미합니다. 화면 원점은 중심에 있으며, X는 오른쪽, Y는 위쪽입니다. 이것은 와이드 스크린에서 제공되는 것입니다.
 
-![screenCoordinates]({{site.baseurl}}/assets/images/tuto-2-first-triangle/screenCoordinates.png){: height="165px" width="300px"}
+![screenCoordinates](http://www.opengl-tutorial.org/assets/images/tuto-2-first-triangle/screenCoordinates.png){: height="165px" width="300px"}
 
 이는 그래픽 카드에 내장된 것으로 변경할 수 없습니다. (-1,-1)은 화면의 왼쪽 아래를 나타내며, (0,1)은 화면의 위쪽 가운데를 나타냅니다. 우리가 준 삼각형 좌표는 화면의 대부분을 차지하게 될 것입니다.
 
@@ -108,7 +108,7 @@ glDisableVertexAttribArray(0);
 
 운이 좋다면 다음과 같은 결과를 볼 수 있을 것입니다. (<span style="color: red">**보지 못하더라도 당황하지 마세요**</span>) :
 
-![triangle_no_shader]({{site.baseurl}}/assets/images/tuto-2-first-triangle/triangle_no_shader1.png){: height="232px" width="300px"}
+![triangle_no_shader](http://www.opengl-tutorial.org/assets/images/tuto-2-first-triangle/triangle_no_shader1.png){: height="232px" width="300px"}
 
 좀 지루한 흰색입니다. 붉은 색으로 칠해 보도록 하겠습니다. 이를 위해 '쉐이더'라는 것을 사용할 것입니다.
 
@@ -298,7 +298,7 @@ glUseProgram(programID);
 
 ... 드디어 여기 빨간 삼각형이 있습니다!
 
-![red_triangle]({{site.baseurl}}/assets/images/tuto-2-first-triangle/red_triangle.png){: height="231px" width="300px"}
+![red_triangle](http://www.opengl-tutorial.org/assets/images/tuto-2-first-triangle/red_triangle.png){: height="231px" width="300px"}
 
 In the next tutorial we'll learn transformations : How to setup your camera, move your objects, etc.
 다음 튜토리얼에서는 변환에 대해 배우게 됩니다. 카메라를 셋업하는 방법과, 오브젝트를 이동시키는 방법 등을 배우겠습니다.  
