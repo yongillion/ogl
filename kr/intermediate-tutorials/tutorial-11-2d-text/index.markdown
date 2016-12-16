@@ -12,7 +12,7 @@ tags: []
 
 In this tutorial, we'll learn to draw 2D text on top of our 3D content. In our case, this will be a simple timer :
 
-![]({{site.baseurl}}/assets/images/tuto-11-2d-text/clock.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-11-2d-text/clock.png)
 
 
 # The API
@@ -33,7 +33,7 @@ See common/text2D.cpp for the complete implementation.
 
 initText2D simply reads a texture and a couple of shaders. There's nothing fancy about it, but let's look at the texture :
 
-![]({{site.baseurl}}/assets/images/tuto-11-2d-text/fontalpha.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-11-2d-text/fontalpha.png)
 
 
 This texture was generated using [CBFG](http://www.codehead.co.uk/cbfg/), one of the many tools that generate textures from fonts. If was then imported in Paint.NET where I added a red background (for visualisation purposes only : everywhere you see red, it's supposed to be transparent ).

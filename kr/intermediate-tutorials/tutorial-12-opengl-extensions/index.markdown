@@ -37,7 +37,7 @@ you can have an error message and the exact location of the problem. Lessons lea
 * Extensions are still very useful, even in modern, 3.3 OpenGL
 * Use ARB_debug_output ! See below for links.
 
-![]({{site.baseurl}}/assets/images/tuto-12-ogl-ext/breakpoint.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-12-ogl-ext/breakpoint.png)
 
 
 ## Getting an extension - the hard way

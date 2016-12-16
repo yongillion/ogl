@@ -293,7 +293,7 @@ for(int i=0; i<MaxParticles; i++){
 
 This is what you get. Almost there, but there's a problem...
 
-![]({{site.baseurl}}/assets/images/tuto-particules/particles_unsorted.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-particules/particles_unsorted.png)
 
 ## Sorting
 
@@ -322,7 +322,7 @@ struct Particle{
 
 This will make ParticleContainer be sorted, and the particles now display correctly*:
 
-![]({{site.baseurl}}/assets/images/tuto-particules/particles_final.gif)
+![](http://www.opengl-tutorial.org/assets/images/tuto-particules/particles_final.gif)
 
 
  
@@ -334,7 +334,7 @@ This will make ParticleContainer be sorted, and the particles now display correc
 
 You can animate your particles' texture with a texture atlas. Send the age of each particle along with the position, and in the shaders, compute the UVs like we did for the [2D font tutorial](http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-11-2d-text/). A texture atlas looks like this :
 
-![]({{site.baseurl}}/assets/images/tuto-particules/ParticleAtlas.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-particules/ParticleAtlas.png)
 
 
 ## Handling several particle systems
@@ -351,7 +351,7 @@ Of course, you can also use some kind of hybrid system with several particle sys
 
 You'll notice very soon a common artifact : when your particle intersect some geometry, the limit becomes very visible and ugly :
 
-![]({{site.baseurl}}/assets/images/tuto-particules/ParticleHardSmooth.jpg)
+![](http://www.opengl-tutorial.org/assets/images/tuto-particules/ParticleHardSmooth.jpg)
 
 
 (image from http://www.gamerendering.com/2009/09/16/soft-particles/ )

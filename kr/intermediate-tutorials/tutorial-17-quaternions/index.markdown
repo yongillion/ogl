@@ -16,7 +16,7 @@ In Tutorial 3 - Matrices, we learnt that matrices are able to rotate a point aro
 
 We will present the two most common ways to represent rotation: Euler angles and Quaternions. Most importantly, we will explain why you should probably use Quaternions.
 
-![]({{site.baseurl}}/assets/images/tuto-17-rotation/tuto17.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-17-rotation/tuto17.png)
 
 
 # Foreword: rotation VS orientation
@@ -69,7 +69,7 @@ RotationAxis is, as its name implies, the axis around which you want to make you
 
 RotationAngle is the angle of rotation around this axis.
 
-![]({{site.baseurl}}/assets/images/tuto-17-rotation/quaternion.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-17-rotation/quaternion.png)
 
 
 So essentially quaternions store a *rotation axis* and a *rotation angle*, in a way that makes combining rotations easy.

@@ -33,7 +33,7 @@ Here, we simply hardcode the alpha channel at 0.3, but you probably want to use 
 
 Here's the result. Make sure to turn backface culling off (glDisable(GL_CULL_FACE) ) because since we can look through the mesh, we could see that it has no "back" face.
 
-![]({{site.baseurl}}/assets/images/tuto-10-transparency/transparencyok.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-10-transparency/transparencyok.png)
 
 
 # Order matters !
@@ -44,12 +44,12 @@ The previous screenshot looks okay-ish, but that's just because we're lucky.
 
 Here, I drew two squares with 50% alpha, one green and one red. You can see that order is important, the final colour gives an important clue to the eyes for proper depth perception.
 
-![]({{site.baseurl}}/assets/images/tuto-10-transparency/transparencyorder.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-10-transparency/transparencyorder.png)
 
 
 This phenomena also happens in our scene. Let's change the viewpoint a bit :
 
-![]({{site.baseurl}}/assets/images/tuto-10-transparency/transparencybad.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-10-transparency/transparencybad.png)
 
 
 It turns out that this is a very hard problem. You never see lots of transparency in games, do you ?

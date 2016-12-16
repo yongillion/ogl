@@ -16,7 +16,7 @@ This a video-only tutorial. It doesn't introduce any new OpenGL-specific techniq
 
 This tutorials explains how to build a simple world in Blender, and bake the lightmaps so that you can use them in your application.
 
-![]({{site.baseurl}}/assets/images/tuto-15-lightmaps/lighmappedroom.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-15-lightmaps/lighmappedroom.png)
 
 No prior knowledge of Blender is required. I will explain all keyboard shortcuts and everything.
 
@@ -38,7 +38,7 @@ This is a 1024x768p video, use HD mode...
 
 When rendering it in OpenGL, you might notice some glitches (exaggerated here) :
 
-![]({{site.baseurl}}/assets/images/tuto-15-lightmaps/positivebias.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-15-lightmaps/positivebias.png)
 
 
 This is because of mipmapping, which blends texels together when seen at a distance. Black pixels from the texture's background get mixed with good parts of the lightmap. To avoid this, there are a few things you can do :

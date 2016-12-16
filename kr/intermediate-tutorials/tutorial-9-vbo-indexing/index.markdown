@@ -16,7 +16,7 @@ Until now, when building your VBO, we always duplicated our vertices whenever tw
 
 In this tutorial, we introduce indexing, which enables to reuse the same vertex over and over again. This is done with an *index buffer*.
 
-![]({{site.baseurl}}/assets/images/tuto-9-vbo-indexing/indexing1.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-9-vbo-indexing/indexing1.png)
 
 
 The index buffer contains integers, three for each triangle in the mesh, which reference the various *attribute buffers* (position, colour, UV coordinates, other UV coordinates, normal, ...). It's a little bit like in the OBJ file format, with one huge difference : there is only ONE index buffer. This means that for a vertex to be shared between two triangles, all attributes must be the same.
@@ -25,17 +25,17 @@ The index buffer contains integers, three for each triangle in the mesh, which r
 
 Let's take the example of the normals. In this figure, the artist who created these two triangle probably wanted them to represent a smooth surface. We can thus blend the normals of the two triangle into a single vertex normal. For visualization purposes, I added a red line which represents the aspect of the smooth surface.
 
-![]({{site.baseurl}}/assets/images/tuto-9-vbo-indexing/goodsmooth.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-9-vbo-indexing/goodsmooth.png)
 
 
 In this second figure however, the artist visibly wanted a "seam", a rough edge. But if we merge the normals, this means that the shader will smoothly interpolate as usual and create a smooth aspect just like before :
 
-![]({{site.baseurl}}/assets/images/tuto-9-vbo-indexing/badmooth.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-9-vbo-indexing/badmooth.png)
 
 
 So in this case it's actually better to have two different normals, one for each vertex. The only way to do this in OpenGL is to duplicate the whole vertex, with its whole set of attributes.
 
-![]({{site.baseurl}}/assets/images/tuto-9-vbo-indexing/spiky.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-9-vbo-indexing/spiky.png)
 
 
 # Indexed VBO in OpenGL

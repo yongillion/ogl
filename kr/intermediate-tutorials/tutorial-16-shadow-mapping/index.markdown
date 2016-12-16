@@ -24,7 +24,7 @@ The "being in the shadow" test is actually quite simple. If the current sample i
 
 The following image might help you understand the principle :
 
-![]({{site.baseurl}}/assets/images/tuto-16-shadow-mapping/shadowmapping.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-16-shadow-mapping/shadowmapping.png)
 
 
 ## Rendering the shadow map
@@ -122,7 +122,7 @@ Rendering a shadow map is usually more than twice as fast as the normal render, 
 
 The resulting texture looks like this :
 
-![]({{site.baseurl}}/assets/images/tuto-16-shadow-mapping/DepthTexture.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-16-shadow-mapping/DepthTexture.png)
 
 
 A dark colour means a small z ; hence, the upper-right corner of the wall is near the camera. At the opposite, white means z=1 (in homogeneous coordinates), so this is very far.
@@ -198,7 +198,7 @@ color =
 
 Here's the result of the current code. Obviously, the global idea it there, but the quality is unacceptable.
 
-![]({{site.baseurl}}/assets/images/tuto-16-shadow-mapping/1rstTry.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-16-shadow-mapping/1rstTry.png)
 
 
 Let's look at each problem in this image. The code has 2 projects : shadowmaps and shadowmaps_simple; start with whichever you like best. The simple version is just as ugly as the image above, but is simpler to understand.
@@ -210,12 +210,12 @@ Let's look at each problem in this image. The code has 2 projects : shadowmaps a
 
 The most obvious problem is called *shadow acne* :
 
-![]({{site.baseurl}}/assets/images/tuto-16-shadow-mapping/ShadowAcne.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-16-shadow-mapping/ShadowAcne.png)
 
 
 This phenomenon is easily explained with a simple image :
 
-![]({{site.baseurl}}/assets/images/tuto-16-shadow-mapping/shadow-acne.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-16-shadow-mapping/shadow-acne.png)
 
 
 The usual "fix" for this is to add an error margin : we only shade if the current fragment's depth (again, in light space) is really far away from the lightmap value. We do this by adding a bias :
@@ -231,7 +231,7 @@ if ( texture( shadowMap, ShadowCoord.xy ).z  <  ShadowCoord.z-bias){
 
 The result is already much nicer :
 
-![]({{site.baseurl}}/assets/images/tuto-16-shadow-mapping/FixedBias.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-16-shadow-mapping/FixedBias.png)
 
 
 However, you can notice that because of our bias, the artefact between the ground and the wall has gone worse. What's more, a bias of 0.005 seems too much on the ground, but not enough on curved surface : some artefacts remain on the cylinder and on the sphere.
@@ -246,12 +246,12 @@ bias = clamp(bias, 0,0.01);
 
 Shadow acne is now gone, even on curved surfaces.
 
-![]({{site.baseurl}}/assets/images/tuto-16-shadow-mapping/VariableBias.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-16-shadow-mapping/VariableBias.png)
 
 
 Another trick, which may or may not work depending on your geometry, is to render only the back faces in the shadow map. This forces us to have a special geometry ( see next section - Peter Panning ) with thick walls, but at least, the acne will be on surfaces which are in the shadow :
 
-![]({{site.baseurl}}/assets/images/tuto-16-shadow-mapping/shadowmapping-backfaces.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-16-shadow-mapping/shadowmapping-backfaces.png)
 
 
 When rendering the shadow map, cull front-facing triangles :
@@ -275,7 +275,7 @@ This method is used in the code, in addition to the bias.
 
 We have no shadow acne anymore, but we still have this wrong shading of the ground, making the wall to look as if it's flying (hence the term "Peter Panning"). In fact, adding the bias made it worse.
 
-![]({{site.baseurl}}/assets/images/tuto-16-shadow-mapping/PeterPanning.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-16-shadow-mapping/PeterPanning.png)
 
 
 This one is very easy to fix : simply avoid thin geometry. This has two advantages :
@@ -285,14 +285,14 @@ This one is very easy to fix : simply avoid thin geometry. This has two advantag
 
 The drawback is that you have more triangles to render ( two times per frame ! )
 
-![]({{site.baseurl}}/assets/images/tuto-16-shadow-mapping/NoPeterPanning.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-16-shadow-mapping/NoPeterPanning.png)
 
 
 ## Aliasing
 
 Even with these two tricks, you'll notice that there is still aliasing on the border of the shadow. In other words, one pixel is white, and the next is black, without a smooth transition inbetween.
 
-![]({{site.baseurl}}/assets/images/tuto-16-shadow-mapping/Aliasing.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-16-shadow-mapping/Aliasing.png)
 
 
 ### PCF
@@ -303,7 +303,7 @@ For instance, 0.5 means that 2 samples are in the shadow, and 2 samples are in t
 
 Note that it's not the same than a single sampling of a filtered depth map ! A comparison always returns true or false; PCF gives a interpolation of 4 "true or false".
 
-![]({{site.baseurl}}/assets/images/tuto-16-shadow-mapping/PCF_1tap.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-16-shadow-mapping/PCF_1tap.png)
 
 
 As you can see, shadow borders are smooth, but shadowmap's texels are still visible.
@@ -335,18 +335,18 @@ vec2 poissonDisk[4] = vec2[](
 
 This way, depending on how many shadowmap samples will pass, the generated fragment will be more or less dark :
 
-![]({{site.baseurl}}/assets/images/tuto-16-shadow-mapping/SoftShadows.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-16-shadow-mapping/SoftShadows.png)
 
 
 The 700.0 constant defines how much the samples are "spread". Spread them too little, and you'll get aliasing again; too much, and you'll get this :* banding *(this screenshot doesn't use PCF for a more dramatic effect, but uses 16 samples instead)*
 *
 
-![]({{site.baseurl}}/assets/images/tuto-16-shadow-mapping/SoftShadows_Close.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-16-shadow-mapping/SoftShadows_Close.png)
 
 
  
 
-![]({{site.baseurl}}/assets/images/tuto-16-shadow-mapping/SoftShadows_Wide.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-16-shadow-mapping/SoftShadows_Wide.png)
 
 
 ### Stratified Poisson Sampling
@@ -385,7 +385,7 @@ In our case, seed4 will be the combination of i (so that we sample at 4 differen
 
 This will make patterns such as in the picture above disappear, at the expense of visual noise. Still, a well-done noise is often less objectionable than these patterns.
 
-![]({{site.baseurl}}/assets/images/tuto-16-shadow-mapping/PCF_stratified_4tap.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-16-shadow-mapping/PCF_stratified_4tap.png)
 
 See [tutorial16/ShadowMapping.fragmentshader](https://github.com/opengl-tutorials/ogl/blob/master/tutorial16_shadowmaps/ShadowMapping.fragmentshader) for three example implementions.
 

@@ -45,7 +45,7 @@ This one is usually better and not much more complicated.
 
 The goal is to keep the mesh aligned with the camera, even when the camera moves :
 
-![]({{site.baseurl}}/assets/images/tuto-billboard/2a.gif)
+![](http://www.opengl-tutorial.org/assets/images/tuto-billboard/2a.gif)
 
 
 You can view this problem as generating an appropriate Model matrix, even though it's is much simpler than that.
@@ -54,7 +54,7 @@ The idea is that each corner of the billboard is at the center position, displac
 
  
 
-![]({{site.baseurl}}/assets/images/tuto-billboard/principle.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-billboard/principle.png)
 
 
  
@@ -85,7 +85,7 @@ vec3 vertexPosition_worldspace =
 * BillboardSize is the size, in world units, of the billboard, sent as another uniform.
 
 <div><span style="font-size: medium;"><span style="line-height: 24px;">And presto, here's the result. Wasn't this easy ? </span></span><span style="font-size: 16px;"> </span></div>
-![]({{site.baseurl}}/assets/images/tuto-billboard/2.gif)
+![](http://www.opengl-tutorial.org/assets/images/tuto-billboard/2.gif)
 
 
  
@@ -125,7 +125,7 @@ If you want a size in pixels, easy : just use (ScreenSizeInPixels / BillboardSiz
 
  
 
-![]({{site.baseurl}}/assets/images/tuto-billboard/3.gif)
+![](http://www.opengl-tutorial.org/assets/images/tuto-billboard/3.gif)
 
 
  

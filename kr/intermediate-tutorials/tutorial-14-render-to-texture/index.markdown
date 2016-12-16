@@ -168,7 +168,7 @@ This code simply sample the texture, but adds a tiny offset which depends on tim
 
  
 
-![]({{site.baseurl}}/assets/images/tuto-14-render-to-texture/wavvy.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-14-render-to-texture/wavvy.png)
 
 
 # Going further
@@ -190,7 +190,7 @@ Note that this should be somewhat slower, because the driver won't be able to us
 
 In this screenshot, the depth levels are artificially "prettified". Usually, its much more difficult to see anything on a depth texture. Near = Z near 0 = black, far = Z near 1 = white.
 
-![]({{site.baseurl}}/assets/images/tuto-14-render-to-texture/wavvydepth.png)
+![](http://www.opengl-tutorial.org/assets/images/tuto-14-render-to-texture/wavvydepth.png)
 
 
 ## Multisampling
