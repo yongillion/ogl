@@ -2,7 +2,7 @@
 layout: page
 status: publish
 published: true
-title: 'Tutorial 5 : A Textured Cube'
+title: '튜토리얼 5 : 정육면체에 텍스처 입히기'
 date: '2011-04-26 07:55:58 +0200'
 date_gmt: '2011-04-26 07:55:58 +0200'
 categories: [tuto]

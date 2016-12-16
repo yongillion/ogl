@@ -2,7 +2,7 @@
 layout: page
 status: publish
 published: true
-title: 'Tutorial 2 : The first triangle'
+title: '튜토리얼 2 : 첫 번째 삼각형'
 date: '2011-04-07 18:54:11 +0200'
 date_gmt: '2011-04-07 18:54:11 +0200'
 categories: [tuto]
@@ -15,7 +15,7 @@ tags: []
 
 OpenGL 3를 사용하면 복잡한 작업을 쉽게 작성할 수 있긴 하지만, 사실은 간단한 삼각형을 그리는 것조차 꽤나 어렵습니다.
 
-주기적으로 코드를 잘라내기/붙여넣기 하는 것을 잊지 마십시오.
+주기적으로 코드를 복사/붙여넣기 하는 것을 잊지 마십시오.
 
 **<span style="color: red">만약 시작시 프로그램이 중단된다면, 잘못된 디렉토리에서 실행하고 있을 확률이 높습니다. 첫 번째 튜토리얼을 주의 깊게 읽고 Visual Studio를 설정하세요.</span>**
 

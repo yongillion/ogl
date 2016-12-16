@@ -2,7 +2,7 @@
 layout: page
 status: publish
 published: true
-title: 'Tutorial 4 : A Colored Cube'
+title: '튜토리얼 4 : 정육면체에 색 입히기'
 date: '2011-04-26 07:55:37 +0200'
 date_gmt: '2011-04-26 07:55:37 +0200'
 categories: [tuto]
