@@ -2,7 +2,7 @@
 layout: page
 status: publish
 published: true
-title: 'Tutorial 9 : VBO Indexing'
+title: '튜토리얼 9 : VBO 인덱싱'
 date: '2011-05-12 19:21:49 +0200'
 date_gmt: '2011-05-12 19:21:49 +0200'
 categories: [tuto]
@@ -10,37 +10,34 @@ order: 10
 tags: []
 ---
 
-# The principle of indexing
+# 인덱싱의 원리
 
-Until now, when building your VBO, we always duplicated our vertices whenever two triangles shared an edge.
+지금까지 우리는 VBO를 만들 때, 두 개의 삼각형이 꼭지점을 공유할 경우 정점을 중복해서 정의했습니다.
 
-In this tutorial, we introduce indexing, which enables to reuse the same vertex over and over again. This is done with an *index buffer*.
+이 튜토리얼에서는 동일한 정점을 여러번 재사용할 수 있는 인덱싱을 소개합니다. 이것은 *인덱스 버퍼*라는 것을 이용해서 수행할 수 있습니다.
 
 ![](http://www.opengl-tutorial.org/assets/images/tuto-9-vbo-indexing/indexing1.png)
 
 
-The index buffer contains integers, three for each triangle in the mesh, which reference the various *attribute buffers* (position, colour, UV coordinates, other UV coordinates, normal, ...). It's a little bit like in the OBJ file format, with one huge difference : there is only ONE index buffer. This means that for a vertex to be shared between two triangles, all attributes must be the same.
+인덱스 버퍼는 여러가지 *어트리뷰트 버퍼*(위치, 색, UV 좌표, 다른 UV 좌표, 법선 등...)를 참조하는 정수를 메쉬의 각 삼각형마다 세개씩 가지고 있습니다. OBJ 파일 포맷과 비슷한 것 같지만 한 가지 큰 차이가 있습니다. 바로 하나의 인덱스 버퍼만을 가진다는 것입니다. 이는 어떠한 정점이 두 개의 삼각형 사이에 공유되어야 한다면 모든 어트리뷰트가 같아야만 한다는 것을 의미합니다.
 
-# Shared vs Separate
+# 공유 vs 분리
 
-Let's take the example of the normals. In this figure, the artist who created these two triangle probably wanted them to represent a smooth surface. We can thus blend the normals of the two triangle into a single vertex normal. For visualization purposes, I added a red line which represents the aspect of the smooth surface.
+법선의 예를 들어봅시다. 아래 그림과 같은 두개의 삼각형을 만든 아티스트는 아마도 완만한 표면을 표현하기를 원했을지도 모릅니다. 그러므로 이 경우 두 삼각형의 법선을 섞어서 하나의 정점 법선을 만들 수 있습니다. 더 잘 보여주기 위해 완만한 표면을 나타내는 붉은 선을 추가했습니다. 
 
 ![](http://www.opengl-tutorial.org/assets/images/tuto-9-vbo-indexing/goodsmooth.png)
 
-
-In this second figure however, the artist visibly wanted a "seam", a rough edge. But if we merge the normals, this means that the shader will smoothly interpolate as usual and create a smooth aspect just like before :
-
+하지만 두 번째 그림에서는 아트스트는 시각적으로 "뾰족한" 모서리를 원했습니다. 만약 두 삼각형의 법선을 합쳐버리면 셰이더에서는 이전과 비슷하게 일반적으로 보간(interplate)을 해서 완곡하게 만들어버릴 것입니다.
 ![](http://www.opengl-tutorial.org/assets/images/tuto-9-vbo-indexing/badmooth.png)
 
-
-So in this case it's actually better to have two different normals, one for each vertex. The only way to do this in OpenGL is to duplicate the whole vertex, with its whole set of attributes.
+이 경우에는 사실 각 정점마다 다른 두개의 법선을 가지는 것이 낫습니다. OpenGL에서 이를 위한 방법은 법선을 제외한 정점의 모든 어트리뷰트들을 중복해서 가지는 것입니다.
 
 ![](http://www.opengl-tutorial.org/assets/images/tuto-9-vbo-indexing/spiky.png)
 
 
-# Indexed VBO in OpenGL
+# OpenGL에서 VBO 인덱싱
 
-Using indexing is very simple. First, you need to create an additional buffer, which you fill with the right indices. The code is the same as before, but now it's an ELEMENT_ARRAY_BUFFER, not an ARRAY_BUFFER.
+인덱싱을 사용하는 것은 매우 쉽습니다. 먼저 적절한 인덱스들을 채워 넣을 추가적인 버퍼를 생성해야 합니다. 코드는 이전과 같지만 ARRAY_BUFFER가 아닌 ELEMENT_ARRAY_BUFFER를 인자로 사용합니다.
 
 ``` cpp
 std::vector<unsigned int> indices;
@@ -54,7 +51,7 @@ std::vector<unsigned int> indices;
  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 ```
 
-and to draw the mesh, simply replace glDrawArrays by this :
+메쉬를 그리기 위해 glDrawArrays 대신 다음과 같은 코드를 수행합니다.
 
 ``` cpp
 // Index buffer
@@ -69,29 +66,29 @@ and to draw the mesh, simply replace glDrawArrays by this :
  );
 ```
 
-(quick note : it's better to use "unsigned short" than "unsigned int", because it takes less memory, which also makes it faster)
+(빠른 노트, "unsigned int" 대신 "unsigned short"를 사용하는 것이 낫습니다. 그 이유는 적은 메모리를 사용하고 이로 인해 더 빠르기 때문입니다.)
 
-# Filling the index buffer
+# 인덱스 버퍼 채우기
 
-Now we actually have a problem. As I said before, OpenGL can only use one index buffer, whereas OBJ (and some other popular 3D formats like Collada) use one index buffer *by attribute*. Which means that we somehow have to convert from N index buffers to 1 index buffer.
+이제 실제로 문제가 있습니다. 앞서 말했듯이 OpenGL은 하나의 인덱스 버퍼만을 사용할 수 있습니다. 반면 OBJ (Collada와 같이 다른 유명한 3D 포맷들도)는 "어트리뷰트"마다 하나의 인덱스 버퍼를 가집니다. 이 말은 우리가 직접 어떠한 방법으로 여러개의 인덱스 버퍼를 하나의 인덱스 버퍼로 변환해주어야 한다는 의미입니다.
 
-The algorithm to do this is as follows :
+이를 위한 알고리즘은 다음과 같습니다. :
+
+```
+각 입력된 정점마다
+   모든 이미 출력한 정점들 중에 동일한(= 모든 어트리뷰트가 동일한) 정점이 존재하는지 찾습니다.
+   존재한다면:
+      이미 동일한 정점이 VBO안에 존재하므로 사용합니다.
+   존재하지 않는다면:
+      동일한 정점이 없으므로 VBO에 추가합니다.
 ```
 
-For each input vertex
-    Try to find a similar ( = same for all attributes ) vertex between all those we already output
-    If found :
-        A similar vertex is already in the VBO, use it instead !
-    If not found :
-        No similar vertex found, add it to the VBO
-```
+실제 C++ 코드는 "common/vboindexer.cpp"에서 찾을 수 있습니다. 주석을 아주 열심히 달았기 때문에 위 알고리즘을 이해했다면 충분히 이해할 수 있습니다.
 
-The actual C++ code can be found in common/vboindexer.cpp. It's heavily commented so if you understand the algorithm above, it should be all right.
+동일하다는 기준은 정점의 위치, UV, 법선이 **동일한지입니다. 더 많은 어트리뷰트가 필요하다면 적절히 응용하시길 바랍니다.
 
-The criterion for similarity is that vertices' position, UVs and normals should be ** equal. You'll have to adapt this if you add more attributes.
+단순하게 하기위해 동일한 정점을 찾는 방법은 선형 검색을 이용했습니다. 실제 사용에는 std::map이 더 적절할 것입니다.
 
-Searching a similar vertex is done with a lame linear search for simplicity. A std::map would be more appropriate for real use.
+# 추가 : FPS 카운터
 
-# Extra : the FPS counter
-
-It's not directly related to indexing, but it's a good moment to have a look at [the FPS counter](http://www.opengl-tutorial.org/miscellaneous/an-fps-counter/) because we can eventually see the speed improvement of indexing. Other performance tools are available in [Tools - Debuggers](http://www.opengl-tutorial.org/miscellaneous/useful-tools-links/#debugging-tools).
+익덱싱과 직접적인 연관이 있지는 않지만 [the FPS counter](http://www.opengl-tutorial.org/miscellaneous/an-fps-counter/)를 살펴보기 적절한 시점인 것 같습니다. 결과적으로 인덱싱으로 인한 속도 향상을 살펴 볼 수 있기 때문입니다. 다른 성능 도구는 [Tools - Debuggers](http://www.opengl-tutorial.org/miscellaneous/useful-tools-links/#debugging-tools)에서 볼 수 있습니다.
